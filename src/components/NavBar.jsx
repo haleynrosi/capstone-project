@@ -27,29 +27,29 @@ function NavBar(){
 
     return(
         <div style={{display: 'flex', height:'100vh', overflow: 'scroll initial'}}>
-            <nav textColor="black" backgroundColor="white">
-                <NavLink style={{textDecoration: 'none', color: 'black', fontSize: 30, margin: 20}} to='/'>
-                    TraderRecipes
+            <nav textColor="black" backgroundColor="white" style={{padding:20}}>
+                <NavLink style={{textDecoration: 'none', color: 'black', fontSize: 35, margin: 10}} to='/'>
+                    {collapsed ? 'Trader\nRecipes' : 'TraderRecipes' }
                 </NavLink>
                 <ul className="sidebar-content">
                        <li> 
-                        <NavLink className= 'nav-link' style={{textDecoration: 'none', color: 'black', fontSize: 20}} exact to="/breakfast" activeClassName='activeClicked'>
-                           {collapsed ? <BreakfastDining style={{ fontSize: 40 }}/> : 'Breakfast'}
+                        <NavLink className= 'nav-link' style={{textDecoration: 'none', color: 'black', fontSize: 21}} exact to="/breakfast" activeClassName='activeClicked'>
+                           {collapsed ?  <BreakfastDining style={{ fontSize: 30 }}/> : <div><BreakfastDining style={{ fontSize: 30 }}/><span>Breakfast</span></div>}
                         </NavLink>
                         </li>
                         <li>
-                        <NavLink className= 'nav-link' style={{textDecoration: 'none', color: 'black', fontSize: 20}}  exact to='/lunch' activeClassName='activeClicked'>
-                            {collapsed ? <LunchDining style={{ fontSize: 40 }} /> : 'Lunch'}
+                        <NavLink className= 'nav-link' style={{textDecoration: 'none', color: 'black', fontSize: 21}}  exact to='/lunch' activeClassName='activeClicked'>
+                            {collapsed ? <LunchDining style={{ fontSize: 30 }} /> : <div><LunchDining style={{ fontSize: 30 }}/><span>Lunch</span></div>}
                         </NavLink>
                         </li>
                         <li>
-                        <NavLink  className= 'nav-link' style={{textDecoration: 'none', color: 'black', fontSize: 20}}  exact to='/dinner' activeClassName='activeClicked'>
-                          {collapsed ? <DinnerDining style={{ fontSize: 40 }}/> : 'Dinner'}
+                        <NavLink  className= 'nav-link' style={{textDecoration: 'none', color: 'black', fontSize: 21}}  exact to='/dinner' activeClassName='activeClicked'>
+                          {collapsed ? <DinnerDining style={{ fontSize: 30 }}/> : <div><DinnerDining style={{ fontSize: 30 }}/><span>Dinner</span></div>}
                         </NavLink>
                         </li>
                         <li>
-                        <NavLink  className= 'nav-link' style={{textDecoration: 'none', color: 'black', fontSize: 20}} exact to='/signin' activeClassName='activeClicked'>
-                          {collapsed ? <PersonOutline style={{ fontSize: 40 }}/> : 'Sign In'}
+                        <NavLink  className= 'nav-link' style={{textDecoration: 'none', color: 'black', fontSize: 21}} exact to='/signin' activeClassName='activeClicked'>
+                          {collapsed ? <PersonOutline style={{ fontSize: 30 }}/> : <div><PersonOutline style={{ fontSize: 30 }}/><span>Sign In</span></div>}
                         </NavLink>
                         </li>
                 </ul>
