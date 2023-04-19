@@ -22,3 +22,7 @@ body {
 .nav-link:hover {
 color: red;
 }
+
+.navListItem {
+  padding: 8px;
+}

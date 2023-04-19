@@ -4,10 +4,10 @@ import { Button, Form, Row, Card } from "react-bootstrap";
 
 function DinnerRecipes() {
     return (
-        <body style={{ display: "flex", flexDirection: 'row' }}>
+        <div style={{ display: "flex", flexDirection: 'row' }}>
             <NavBar />
             <div className="d-flex row">
-                <div className="d-flex row">
+                <div className="d-flex row"style={{padding:40}}>
                     <Form className="">
                         <Form.Control
                             type="search"
@@ -27,12 +27,12 @@ function DinnerRecipes() {
                         <Button variant="outline-dark">Search</Button>
                     </Form>
                 </div>
-                <Card className="d-flex col">
+                <Card className="d-flex col" style={{margin:40}}>
                     <Card.Title>Popular Dinner Recipes</Card.Title>
                     <Card.Body>....rotating pictures with recipe pictures, names that are clickable thumbnails</Card.Body>
                 </Card>
             </div>
-        </body>
+        </div>
     )
 }
 

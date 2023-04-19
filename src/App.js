@@ -3,14 +3,13 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Routes, Route,} from 'react-router-dom';
 import NavBar from './components/NavBar';
-import SignIn from './components/SignIn';
 import RecipesHome from './components/RecipesHome';
 import DinnerRecipes from './components/DinnerRecipes';
 import LunchRecipes from './components/LunchRecipes';
 import BreakfastRecipes from './components/BreakfastRecipes';
 import MyRecipes from './components/MyRecipes';
 import MyAccount from './components/MyAccount';
-import CreateAccount from './components/CreateAccount';
+
 
 
 function App() {
@@ -59,8 +58,6 @@ function App() {
            <Route path='/breakfast' element={<BreakfastRecipes/>}/>
            <Route path='/accountinfo' element={<MyAccount/>}/>
            <Route path='/myrecipes' element={<MyRecipes/>}/>
-           <Route path='/signin' element={<SignIn/>}/>
-           <Route path='/accountcreation' element={<CreateAccount/>}/>
         </Routes>
       </BrowserRouter>
     </div>
