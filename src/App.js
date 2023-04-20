@@ -9,7 +9,7 @@ import LunchRecipes from './components/LunchRecipes';
 import BreakfastRecipes from './components/BreakfastRecipes';
 import MyRecipes from './components/MyRecipes';
 import MyAccount from './components/MyAccount';
-
+import MyDashboard  from './components/MyDashboard';
 
 
 function App() {
@@ -58,6 +58,7 @@ function App() {
            <Route path='/breakfast' element={<BreakfastRecipes/>}/>
            <Route path='/accountinfo' element={<MyAccount/>}/>
            <Route path='/myrecipes' element={<MyRecipes/>}/>
+           <Route path='/mydashboard' element={<MyDashboard/>}/>
         </Routes>
       </BrowserRouter>
     </div>
