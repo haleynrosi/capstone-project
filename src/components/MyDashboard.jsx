@@ -1,9 +1,12 @@
 import React from "react";
 import {Card, Col, Row, Button} from 'react-bootstrap';
+import NavBar from "./NavBar";
 import { useSelector } from "react-redux";
+import '../App.css';
 
 const MyDashboard = ({username}) => {
     console.log(username)
+    
     const userId = useSelector((state)=>
         state.userId
     )
@@ -24,8 +27,9 @@ const MyDashboard = ({username}) => {
  
 
     return (
-        <body>
-            <h1>{username}'s Dashboard</h1>
+        <div style={{ display: "flex", flexDirection: 'row' }}>
+            <NavBar/>
+            <h2>{username}'s Dashboard</h2>
         <div>
         <Col className="dashboardDiv">
             <Card>
@@ -51,7 +55,7 @@ const MyDashboard = ({username}) => {
         </Col>
 
         </div>
-        </body>
+        </div>
     )
 
 }
