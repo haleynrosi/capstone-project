@@ -14,39 +14,6 @@ import MyDashboard  from './components/MyDashboard';
 
 function App() {
 
-  const recipeData = [
-    {
-      "recipeId": 1,
-      "recipeName": "chili egg pancakes",
-      "recipeType": "breakfast",
-      "description": "lorem ipsum blah blah i'm the best",
-      "owner": 1
-    },
-    {
-      "recipeId": 2,
-      "recipeName": "pumpkin french toast",
-      "recipeType": "breakfast",
-      "description": "lorem ipsum blah blah i'm the best",
-      "owner": 1
-    },
-    {
-      "recipeId": 3,
-      "recipeName": "apple cinnamon oatmeal",
-      "recipeType": "breakfast",
-      "description": "lorem ipsum blah blah i'm the best",
-      "owner": 1
-    },
-    {
-      "recipeId": 4,
-      "recipeName": "blueberry waffle sandwhich",
-      "recipeType": "breakfast",
-      "description": "lorem ipsum blah blah i'm the best",
-      "owner": 1
-    }
-  ]
-
-
-
 
   return (
     <div className="App">

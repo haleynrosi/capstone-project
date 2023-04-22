@@ -4,23 +4,23 @@ import { NavLink } from 'react-router-dom';
 import { Modal, Box, Typography } from "@mui/material";
 import { Card, Form, Button } from 'react-bootstrap';
 import SubmitRecipe from "./SubmitRecipe";
-import alterId from '../actions/alterId';
+import {alterID, resetLogin} from '../actions/alterUser'
 import { useDispatch } from "react-redux";
 import MyDashboard from "./MyDashboard";
+import { resetID } from '../actions/alterUser';
 import { LunchDining, BreakfastDining, DinnerDining, PersonOutline, AccountCircle, GridView, FormatListBulleted, Logout, Settings } from '@mui/icons-material';
 import '../App.css';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import {userLoginSelector} from '../actions/alterUser'
 
 
 function NavBar() {
-
-    const userId = useSelector((state) =>
-        state.userID
-    )
-
+    console.log(userLoginSelector)
+    const loginSelector = useSelector(userLoginSelector)
+    console.log(loginSelector)
     const dispatch = useDispatch(); // just lets us use the actions aka alterId - operates as a function and just needs help being used here bc of redux
 
     const modalstyle = {
@@ -38,7 +38,7 @@ function NavBar() {
     };
 
     const [collapsed, setCollapsed] = useState(false);
-    const [loggedIn, setLoggedIn] = useState(false);
+    // const [loggedIn, setLoggedIn] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [openNestedModal, setOpenNestedModal] = useState(false);
     const [username, setUsername] = useState('');
@@ -78,23 +78,21 @@ function NavBar() {
         await fetchUser.json()
             .then((data) => {
                 console.log(data)
-                dispatch(alterId(data.userId)) 
+                dispatch(userLoginSelector({
+                    userID: data.userId,
+                    loggedIn: true
+                })) 
             })
     }
 
     useEffect(()=>{
-        if (userId !== null) {
-            setLoggedIn(true)
+        if (loginSelector.userID !== null) {
             handleClose()
         }
-    }, [userId])
+    }, [loginSelector])
 
     const userLogout = () => {
-        setLoggedIn(false);
-        dispatch({
-            type: 'ALTERID',
-            data: null
-        });
+        dispatch(resetLogin());
     };
 
     const createUser = () => {
@@ -136,7 +134,7 @@ function NavBar() {
                                 {collapsed ? <DinnerDining style={{ fontSize: 30 }} /> : <div><DinnerDining style={{ fontSize: 30 }} /><span> Dinner</span></div>}
                             </NavLink>
                         </li>
-                        {loggedIn ?
+                        {loginSelector.loggedIn ?
                             <li className="navListItem">
 
                                 <NavLink className='nav-link' style={{ textDecoration: 'none', color: 'white', fontSize: 21 }} activeClassName='activeClicked'>
