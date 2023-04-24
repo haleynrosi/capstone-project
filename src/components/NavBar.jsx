@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { Modal, Box, Typography } from "@mui/material";
 import { Card, Form, Button } from 'react-bootstrap';
 import SubmitRecipe from "./SubmitRecipe";
-import {alterID, resetLogin} from '../actions/alterUser'
+import {alterID, alterLogin, resetLogin} from '../actions/alterUser'
 import { useDispatch } from "react-redux";
 import MyDashboard from "./MyDashboard";
 import { resetID } from '../actions/alterUser';
@@ -19,7 +19,7 @@ import {userLoginSelector} from '../actions/alterUser'
 
 function NavBar() {
     console.log(userLoginSelector)
-    const loginSelector = useSelector(userLoginSelector)
+    const loginSelector = useSelector(state => state.alterUser.userLogin)
     console.log(loginSelector)
     const dispatch = useDispatch(); // just lets us use the actions aka alterId - operates as a function and just needs help being used here bc of redux
 
@@ -78,7 +78,7 @@ function NavBar() {
         await fetchUser.json()
             .then((data) => {
                 console.log(data)
-                dispatch(userLoginSelector({
+                dispatch(alterLogin({
                     userID: data.userId,
                     loggedIn: true
                 })) 
