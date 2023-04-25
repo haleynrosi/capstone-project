@@ -14,7 +14,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import {userLoginSelector, firstNameSelector} from '../actions/alterUser'
+import {userLoginSelector, firstNameSelector} from '../actions/alterUser';
+import { openSRModal } from '../actions/SubmitRecipeModalSlice';
 
 
 function NavBar() {
@@ -23,6 +24,9 @@ function NavBar() {
     console.log(loginSelector)
     const dispatch = useDispatch(); // just lets us use the actions aka alterId - operates as a function and just needs help being used here bc of redux
 
+    const openRecipeModal = () =>{
+        dispatch(openSRModal())
+    }
     const modalstyle = {
         position: 'absolute',
         top: '50%',
@@ -114,6 +118,8 @@ function NavBar() {
         .catch(error => console.error(error))
     }
 
+
+
     return (
         <div>
             <div style={{ display: 'flex', height: '100vh', overflow: 'scroll initial', backgroundColor: '#BC8F8F' }}>
@@ -155,11 +161,10 @@ function NavBar() {
                                                 {collapsed ? <GridView style={{ fontSize: 20 }} /> : <div><GridView style={{ fontSize: 20 }} /><span> Dashboard</span></div>}
                                             </NavLink>
                                         </li>
-                                        <li>
-                                            <NavLink className='nav-link' style={{ textDecoration: 'none', color: 'white', fontSize: 16 }} activeClassName='activeClicked'>
+                                        <NavLink onClick={openRecipeModal} className='nav-link' style={{ textDecoration: 'none', color: 'white', fontSize: 16 }}  activeClassName='activeClicked'>
                                                 {collapsed ? <FormatListBulleted style={{ fontSize: 20 }} /> : <div><FormatListBulleted style={{ fontSize: 20 }} /><span> Submit a Recipe</span></div>}
-                                            </NavLink>
-                                        </li>
+                                                {<SubmitRecipe/>}
+                                        </NavLink>
                                         <li>
                                             <NavLink onClick={userLogout} exact to= '/' className='nav-link' style={{ textDecoration: 'none', color: 'white', fontSize: 16 }} activeClassName='activeClicked'>
                                                 {collapsed ? <Logout style={{ fontSize: 20 }} /> : <div><Logout style={{ fontSize: 20 }} /><span> Logout</span></div>}
