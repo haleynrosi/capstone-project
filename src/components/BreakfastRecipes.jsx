@@ -9,13 +9,10 @@ function BreakfastRecipes() {
     const [searchBreakfastRecipe, setSearchBreakfastRecipe] = useState('');
 
     const searchRecipeByIngredient = async () => {
-       let fetchUser = await fetch('http://34.210.179.63:8008/Recipes/');
+       let fetchUser = await fetch(`http://34.210.179.63:8008/Recipes/name/${searchBreakfastRecipe}`);
        await fetchUser.json()
         .then((data)=>{
             console.log(data)
-            data.map(()=>{
-                
-            })
         })
     }
 

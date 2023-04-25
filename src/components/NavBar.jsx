@@ -14,7 +14,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import {userLoginSelector} from '../actions/alterUser'
+import {userLoginSelector, firstNameSelector} from '../actions/alterUser'
 
 
 function NavBar() {
@@ -80,7 +80,11 @@ function NavBar() {
                 console.log(data)
                 dispatch(alterLogin({
                     userID: data.userId,
-                    loggedIn: true
+                    loggedIn: true,
+                    username: data.username,
+                    email: data.email,
+                    firstName: data.firstName,
+                    lastName: data.lastName
                 })) 
             })
     }
@@ -95,19 +99,18 @@ function NavBar() {
         dispatch(resetLogin());
     };
 
-    const createUser = () => {
-        fetch('http://34.210.179.63:8008/Users', {
+    const createUser = async () => {
+       await fetch('http://34.210.179.63:8008/Users', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(newUser)
         })
         .then(response => response.json())
-        .then(data =>console.log(data))
-        .then(
-            handleNestedClose()
-        ).then(
-            handleClose()
-        )
+        .then(data =>{
+            console.log(data)
+            handleClose();
+            handleNestedClose();
+        })
         .catch(error => console.error(error))
     }
 
@@ -138,7 +141,7 @@ function NavBar() {
                             <li className="navListItem">
 
                                 <NavLink className='nav-link' style={{ textDecoration: 'none', color: 'white', fontSize: 21 }} activeClassName='activeClicked'>
-                                    {collapsed ? <AccountCircle style={{ fontSize: 30 }} /> : <div><AccountCircle style={{ fontSize: 30 }} /><span> User  Account</span></div>}
+                                    {collapsed ? <AccountCircle style={{ fontSize: 30 }} /> : <div><AccountCircle style={{ fontSize: 20 }} /><span> {loginSelector.firstName} 's Account</span></div>}
                                 </NavLink>
                                 <div>
                                     <ul style={{ listStyleType: 'none' }}>

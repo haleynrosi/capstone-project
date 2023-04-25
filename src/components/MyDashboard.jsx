@@ -4,12 +4,10 @@ import NavBar from "./NavBar";
 import { useSelector } from "react-redux";
 import '../App.css';
 
-const MyDashboard = ({username}) => {
-    console.log(username)
+const MyDashboard = () => {
     
-    const userId = useSelector((state)=>
-        state.userId
-    )
+    
+    const loginSelector = useSelector(state => state.alterUser.userLogin)
 
 //    const [username, setUsername] = useState('');
 
@@ -29,7 +27,7 @@ const MyDashboard = ({username}) => {
     return (
         <div style={{ display: "flex", flexDirection: 'row' }}>
             <NavBar/>
-            <h2>{username}'s Dashboard</h2>
+            <h2>{loginSelector.firstName}'s Dashboard</h2>
         <div>
         <Col className="dashboardDiv">
             <Card>
