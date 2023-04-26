@@ -36,19 +36,20 @@ function MyAccount(){
             <Col>
                 <Col>
                     
-                        <h3>Name:</h3>
+                        <h4>Name:</h4>
                         <p>{loginSelector.firstName} {loginSelector.lastName}</p>
-                        <Button onClick={updateName}>Update Name</Button>
+                        <Button style={{ backgroundColor: "#CD5C5C", borderColor: "#CD5C5C", marginBottom: 40}} onClick={updateName}>Update Name</Button>
                     
                 </Col>
                 <Col>
                 
-                        <h3>Email:</h3>
+                        <h4>Email:</h4>
                         <p>{loginSelector.email}</p>
-                        <Button onClick={updateEmail}>Update Email</Button>
+                        <Button style={{ backgroundColor: "#CD5C5C", borderColor: "#CD5C5C", marginBottom: 40}} onClick={updateEmail}>Update Email</Button>
                     
                 </Col>
-                <Button onClick={deleteAccount}>Delete My Account</Button>
+                <h4>Delete Account:</h4>
+                <Button style={{ backgroundColor: "#CD5C5C", borderColor: "#CD5C5C", marginBottom: 40}} onClick={deleteAccount}>Delete My Account</Button>
             
             </Col>
         

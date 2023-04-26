@@ -25,11 +25,12 @@ const MyDashboard = () => {
  
 
     return (
-        <div style={{ display: "flex", flexDirection: 'row' }}>
+        <div style={{ display: "flex"}}>
             <NavBar/>
-            <h2>{loginSelector.firstName}'s Dashboard</h2>
         <div>
-        <Col className="dashboardDiv">
+        <h2 style={{textAlign: 'center'}}>{loginSelector.firstName}'s Dashboard</h2>
+        <Row style={{display:"flex", margin: 50}}>
+        <Col >
             <Card>
                 <Card.Title>Your Favorite Recipes</Card.Title>
                 <Card.Body></Card.Body>
@@ -43,7 +44,8 @@ const MyDashboard = () => {
             </Card>
         </Col>
         <Col>
-            <Button>Submit a recipe to TraderRecipes!</Button>
+            <Button style={{ backgroundColor: "#CD5C5C", borderColor: "#CD5C5C", marginBottom: 40}}>Submit a recipe to TraderRecipes!</Button>
+            
             <Card>
                 <Card.Title>TraderRecipe Of The Week</Card.Title>
                 <Card.Body>
@@ -51,6 +53,7 @@ const MyDashboard = () => {
                 </Card.Body>
             </Card>
         </Col>
+        </Row>
 
         </div>
         </div>

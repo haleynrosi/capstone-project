@@ -214,7 +214,7 @@ function NavBar() {
                         <Typography id="modal-modal-title" variant="h6" component="h2">
                             Account Creation:
                         </Typography>
-                        <Typography id="modal-modal-description" sx={{ mt: 1 }}>
+                        <Typography id="modal-modal-description" >
                             <Form>
                                 <Form.Group>
                                     <Form.Label>Username:</Form.Label>
