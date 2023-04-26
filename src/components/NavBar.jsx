@@ -25,7 +25,7 @@ function NavBar() {
     const dispatch = useDispatch(); // just lets us use the actions aka alterId - operates as a function and just needs help being used here bc of redux
 
     const openRecipeModal = () =>{
-        dispatch(openSRModal())
+        dispatch(openSRModal());
     }
     const modalstyle = {
         position: 'absolute',
