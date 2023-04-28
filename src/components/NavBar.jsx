@@ -78,7 +78,11 @@ function NavBar() {
  
 
     const userLogin = async () => {
-        let fetchUser = await fetch(`http://34.210.179.63:8008/Users/username/${username}`);
+        let fetchUser = await fetch(`http://34.210.179.63:8008/Users/username/${username}`, {
+            headers:{
+                'api-key': 'DigtalCrafts'
+            }
+        });
         await fetchUser.json()
             .then((data) => {
                 console.log(data)
@@ -104,19 +108,19 @@ function NavBar() {
     };
 
     const createUser = async () => {
-       await fetch('http://34.210.179.63:8008/Users', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(newUser)
-        })
-        .then(response => response.json())
-        .then(data =>{
-            console.log(data)
-            handleClose();
-            handleNestedClose();
-        })
-        .catch(error => console.error(error))
-    }
+        await axios.post('http://34.210.179.63:8008/Users', {
+             headers: {
+                 'Content-Type': 'application/json',
+                 'api-key': 'DigitalCrafts'
+             }
+         })
+         .then(response => {
+             console.log(response.data);
+             handleClose();
+             handleNestedClose();
+         })
+         .catch(error => console.error(error))
+     }
 
 
 

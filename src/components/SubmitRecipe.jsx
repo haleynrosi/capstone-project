@@ -48,7 +48,8 @@ function SubmitRecipe(){
     useEffect(()=> {
         axios.get('http://34.210.179.63:8008/Ingredients', {
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'api-key': 'DigtalCrafts'
           }
         })
         .then(response => {
