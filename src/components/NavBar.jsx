@@ -233,11 +233,11 @@ function NavBar() {
                             <Form>
                                 <Form.Group>
                                     <Form.Label>Username:</Form.Label>
-                                    <bR></bR>
+                                    <br></br>
                                     <Form.Text> requirements: 4-20 char.... only letters, numbers underscores and hyphens</Form.Text>
                                     <Form.Control type="text" placeholder="Enter username..." onChange={(e) => setNewUser({...newUser, username:e.target.value})} />
                                 </Form.Group>
-                                <bR></bR>
+                                <br></br>
                                 <Form.Group>
                                     <Form.Label>Email Address:</Form.Label>
                                     <bR></bR>

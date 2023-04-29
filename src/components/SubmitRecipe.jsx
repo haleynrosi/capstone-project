@@ -79,7 +79,7 @@ function SubmitRecipe(){
           ingredientList: recipe.ingredients,
           description: recipe.description,
           owner: loginSelector.userID,
-          imageName: selectedFile.name
+          imageName: selectedFile
       }, {
           headers: {
               "Content-Type": "application/json",
@@ -163,7 +163,7 @@ function SubmitRecipe(){
                 Post a Recipe:
               </Typography>
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                <Form onSubmit={handleSubmit}>
+                <Form>
                   <Form.Group>
                     <Form.Label>Recipe Name:</Form.Label>
                     <Form.Control
@@ -238,7 +238,7 @@ function SubmitRecipe(){
                   </Form.Group>
                         <br></br>
                         <Form.Group>
-                          <Button type='submit' style={{ backgroundColor: '#CD5C5C', borderColor: `#CD5C5C` }} >Submit</Button>
+                          <Button onClick={handleSubmit} style={{ backgroundColor: '#CD5C5C', borderColor: `#CD5C5C` }} >Submit</Button>
                         </Form.Group>
                 </Form>
               </Typography>
