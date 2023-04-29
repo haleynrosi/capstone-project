@@ -19,7 +19,11 @@ function MyAccount(){
     const deleteAccount = async () => {
         await fetch(`http://34.210.179.63:8008/Users/id/${loginSelector.userID}`, {
             method: 'DELETE',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'api-key': 'DigtalCrafts'
+        },
             body: JSON.stringify()
         }).then(response =>{
             console.log(response)

@@ -18,9 +18,9 @@ import {userLoginSelector, firstNameSelector} from '../actions/alterUser'
 
 
 function NavBar() {
-    console.log(userLoginSelector)
+    
     const loginSelector = useSelector(state => state.alterUser.userLogin)
-    console.log(loginSelector)
+
     const dispatch = useDispatch(); // just lets us use the actions aka alterId - operates as a function and just needs help being used here bc of redux
 
     const modalstyle = {
@@ -74,10 +74,14 @@ function NavBar() {
  
 
     const userLogin = async () => {
-        let fetchUser = await fetch(`http://34.210.179.63:8008/Users/username/${username}`);
+        let fetchUser = await fetch(`http://34.210.179.63:8008/Users/username/${username}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'api-key': 'DigtalCrafts'
+            }
+        });
         await fetchUser.json()
             .then((data) => {
-                console.log(data)
                 dispatch(alterLogin({
                     userID: data.userId,
                     loggedIn: true,
@@ -100,9 +104,12 @@ function NavBar() {
     };
 
     const createUser = async () => {
-       await fetch('http://34.210.179.63:8008/Users', {
+       await fetch('http://34.210.179.63:8008/Users', { 
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+            'Content-Type': 'application/json',
+            'api-key': 'DigtalCrafts'
+        },
             body: JSON.stringify(newUser)
         })
         .then(response => response.json())

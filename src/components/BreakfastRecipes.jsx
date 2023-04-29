@@ -1,6 +1,8 @@
-import React from "react";
+import React, {useEffect, useRef}from "react";
 import NavBar from "./NavBar";
 import { useState } from "react";
+import 'react-bootstrap-typeahead/css/Typeahead.css'
+import {Typeahead} from "react-bootstrap-typeahead";
 import { Button, Form, Row, Card, Dropdown, DropdownButton, InputGroup, FormControl, Carousel } from "react-bootstrap";
 
 
@@ -11,6 +13,7 @@ function BreakfastRecipes() {
     const [searchBreakfastImage, setSearchBreakfastImage] = useState('')
     const [searchBreakfast, setSearchBreakfast] = useState('');
     const [searchBreakfastOption, setSearchBreakfastOption] = useState('Search by');
+    const [recipeNames, setRecipeNames] = useState([]);
 
     const breakfastImages = [
         {
@@ -33,6 +36,8 @@ function BreakfastRecipes() {
         },
     ]
 
+    const typeaheadRef = useRef(null);
+
     const handleImgChange = (selectedImgIndex, e) => {
         setImageIndex(selectedImgIndex)
     }
@@ -42,27 +47,32 @@ function BreakfastRecipes() {
     }
 
     const searchBreakfastRecipes = () => {
-        if (searchBreakfastOption === 'Recipe') {
-            searchRecipeByName()
-        } else if (searchBreakfastOption == 'Ingredient') {
+       if (searchBreakfastOption == 'Ingredient') {
             searchRecipeByIngredient()
         }
 
     }
 
+  useEffect(()=>{
+
     const searchRecipeByName = async () => {
-        let fetchUser = await fetch(`http://34.210.179.63:8008/Recipes/name/${searchBreakfast}`);
-        await fetchUser.json()
-            .then((data) => {
-                for (let i in data) {
-                    if (data[i].recipeName === searchBreakfast) {
-                        console.log(data[i].recipeName)
-
-                    }
-
-                }
-            })
+        let fetchUser = await fetch(`http://34.210.179.63:8008/Recipes/type/breakfast`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'api-key': 'DigtalCrafts'
+            }
+        }
+        ).then((response) =>{
+            setRecipeNames(response)
+            console.log(response)
+        }).catch(error=>
+            console.log(error))
+            
     }
+  }, []);
+
+ 
 
     const searchRecipeByIngredient = async () => {
         let fetchUser = await fetch(`http://34.210.179.63:8008/Ingredients/name/${searchBreakfast}`);
@@ -89,6 +99,13 @@ function BreakfastRecipes() {
             <div className="d-flex row">
                 <div className="d-flex row" style={{ padding: 30 }}>
                     <InputGroup style={{ margin: 20 }}>
+                        <Typeahead
+                            id='recipe-list'
+                            labelKey = 'recipeName'
+                            options= {recipeNames}
+                            placeholder = 'Enter Recipe Name'
+                            ref = {typeaheadRef}
+                        />
                         <DropdownButton title={searchBreakfastOption} variant="outline-dark" as={InputGroup.Append}>
                             <Dropdown.Item onClick={() => { searchOptionDropdown('Recipe') }}>
                                 Recipe Name
@@ -97,14 +114,7 @@ function BreakfastRecipes() {
                                 Ingredient Name
                             </Dropdown.Item>
                         </DropdownButton>
-                        <FormControl
-                            type="search"
-                            placeholder="Search by..."
-                            className=""
-                            aria-label="Search"
-                            value={searchBreakfast}
-                            onChange={(e) => setSearchBreakfast(e.target.value)}
-                        />
+                      
                         <Button variant="outline-dark" onClick={searchBreakfastRecipes}>Search</Button>
                     </InputGroup>
                     <Card className="breakfastRecipeDiv" style={{ margin: 20, border: 'none' }}>
