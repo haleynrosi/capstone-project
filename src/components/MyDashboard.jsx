@@ -3,8 +3,15 @@ import {Card, Col, Row, Button} from 'react-bootstrap';
 import NavBar from "./NavBar";
 import { useSelector } from "react-redux";
 import '../App.css';
+import { openSRModal } from '../actions/SubmitRecipeModalSlice';
+import SubmitRecipe from "./SubmitRecipe";
+import { useDispatch } from "react-redux";
 
 const MyDashboard = () => {
+    const dispatch = useDispatch();
+    const openRecipeModal = () =>{
+        dispatch(openSRModal());
+    }
     
     
     const loginSelector = useSelector(state => state.alterUser.userLogin)
@@ -44,8 +51,8 @@ const MyDashboard = () => {
             </Card>
         </Col>
         <Col>
-            <Button style={{ backgroundColor: "#CD5C5C", borderColor: "#CD5C5C", marginBottom: 40}}>Submit a recipe to TraderRecipes!</Button>
-            
+            <Button onClick={ openRecipeModal }>Submit a recipe to TraderRecipes!</Button>
+            <SubmitRecipe/>
             <Card>
                 <Card.Title>TraderRecipe Of The Week</Card.Title>
                 <Card.Body>

@@ -10,6 +10,7 @@ import BreakfastRecipes from './components/BreakfastRecipes';
 import MyRecipes from './components/MyRecipes';
 import MyAccount from './components/MyAccount';
 import MyDashboard  from './components/MyDashboard';
+import SubmitRecipe from './components/SubmitRecipe';
 
 
 function App() {

@@ -26,3 +26,8 @@ color: red;
 .navListItem {
   padding: 8px;
 }
+
+.file-upload{
+  cursor: pointer;
+
+}

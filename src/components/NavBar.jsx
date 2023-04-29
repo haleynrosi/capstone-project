@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { Modal, Box, Typography } from "@mui/material";
 import { Card, Form, Button } from 'react-bootstrap';
 import SubmitRecipe from "./SubmitRecipe";
-import {alterID, alterLogin, resetLogin} from '../actions/alterUser'
+import { alterLogin, resetLogin} from '../actions/alterUser'
 import { useDispatch } from "react-redux";
 import MyDashboard from "./MyDashboard";
 import { resetID } from '../actions/alterUser';
@@ -14,7 +14,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import {userLoginSelector, firstNameSelector} from '../actions/alterUser'
+import {userLoginSelector, firstNameSelector} from '../actions/alterUser';
+import { openSRModal } from '../actions/SubmitRecipeModalSlice';
 
 
 function NavBar() {
@@ -23,6 +24,9 @@ function NavBar() {
 
     const dispatch = useDispatch(); // just lets us use the actions aka alterId - operates as a function and just needs help being used here bc of redux
 
+    const openRecipeModal = () =>{
+        dispatch(openSRModal());
+    }
     const modalstyle = {
         position: 'absolute',
         top: '50%',
@@ -43,6 +47,7 @@ function NavBar() {
     const [openNestedModal, setOpenNestedModal] = useState(false);
     const [username, setUsername] = useState('');
     const [newUser, setNewUser] = useState({
+        userID:null,
         username: "",
         email: "",
         password: "",
@@ -162,11 +167,10 @@ function NavBar() {
                                                 {collapsed ? <GridView style={{ fontSize: 20 }} /> : <div><GridView style={{ fontSize: 20 }} /><span> Dashboard</span></div>}
                                             </NavLink>
                                         </li>
-                                        <li>
-                                            <NavLink className='nav-link' style={{ textDecoration: 'none', color: 'white', fontSize: 16 }} activeClassName='activeClicked'>
+                                        <NavLink onClick={openRecipeModal} className='nav-link' style={{ textDecoration: 'none', color: 'white', fontSize: 16 }}  activeClassName='activeClicked'>
                                                 {collapsed ? <FormatListBulleted style={{ fontSize: 20 }} /> : <div><FormatListBulleted style={{ fontSize: 20 }} /><span> Submit a Recipe</span></div>}
-                                            </NavLink>
-                                        </li>
+                                                {<SubmitRecipe/>}
+                                        </NavLink>
                                         <li>
                                             <NavLink onClick={userLogout} exact to= '/' className='nav-link' style={{ textDecoration: 'none', color: 'white', fontSize: 16 }} activeClassName='activeClicked'>
                                                 {collapsed ? <Logout style={{ fontSize: 20 }} /> : <div><Logout style={{ fontSize: 20 }} /><span> Logout</span></div>}
@@ -225,11 +229,11 @@ function NavBar() {
                             <Form>
                                 <Form.Group>
                                     <Form.Label>Username:</Form.Label>
-                                    <bR></bR>
+                                    <br></br>
                                     <Form.Text> requirements: 4-20 char.... only letters, numbers underscores and hyphens</Form.Text>
                                     <Form.Control type="text" placeholder="Enter username..." onChange={(e) => setNewUser({...newUser, username:e.target.value})} />
                                 </Form.Group>
-                                <bR></bR>
+                                <br></br>
                                 <Form.Group>
                                     <Form.Label>Email Address:</Form.Label>
                                     <bR></bR>
