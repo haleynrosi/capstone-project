@@ -15,8 +15,17 @@ import { setIngredientList, setSelectedIngredients, deleteSelectedIngredient } f
 
 
 
+
+
 // submit recipe modal form
 function SubmitRecipe(){
+
+      //modal state
+      const isOpen = useSelector(selectIsModalOpen);
+    
+      const handleCloseModal = () => {
+          dispatch(closeSRModal());
+      }
 
     const modalstyle = {
         position: 'absolute',
@@ -32,17 +41,71 @@ function SubmitRecipe(){
         p: 4,
     };
 
-    //modal state
-    const isOpen = useSelector(selectIsModalOpen);
-    const dispatch = useDispatch();
+    const [recipe, setRecipe] = useState({
+        recipeName: "",
+        recipeType:"",
+        ingredients:[],
+        description:""
     
-    const handleCloseModal = () => {
-        dispatch(closeSRModal());
-    }
+    });
+
+    const handleRecipeChange = (event) => {
+        const { name, value } = event.target;
+        setRecipe((prevRecipe) => ({
+          ...prevRecipe,
+          [name]: value
+        }));
+      };
+
+      
+    const selectedFile = useSelector((state => state.dropzone.selectedFile));
+
+    const loginSelector = useSelector(state => state.alterUser.userLogin)
 
     //ingredient selectors
     const ingredientList = useSelector(state => state.ingredientList);
     const selectedIngredients = useSelector(state => state.selectedIngredients);
+
+    const dispatch = useDispatch();
+
+    const handleSubmit = (event) => {
+      console.log(recipe)
+        event.preventDefault();
+       
+        
+        axios.post("http://34.210.179.63:8008/Recipes", {
+          recipeName: recipe.recipeName,
+          recipeType: recipe.recipeType,
+          ingredientList: recipe.ingredients,
+          description: recipe.description,
+          owner: loginSelector.userID,
+          imageName: selectedFile.name
+      }, {
+          headers: {
+              "Content-Type": "application/json",
+              "api-key": "DigtalCrafts"
+          }
+      })
+        .then(() => {
+            // reset the form and close the modal
+        setRecipe({
+            recipeName: "",
+            recipeType:"",
+            ingredients:[],
+            description:"",
+        });
+        
+            dispatch(setSelectedIngredients([]));
+            handleCloseModal();
+
+        }).catch((err) => console.error(err));
+    };
+
+    
+
+
+
+  
 
     //API call for ingredientList
     useEffect(()=> {
@@ -53,11 +116,12 @@ function SubmitRecipe(){
           }
         })
         .then(response => {
-          console.log(response.data);
+          
           dispatch(setIngredientList(response.data));
         })
         .catch(err => console.error(err));
       },[]);
+
 
     //ingredient form useRef
     const typeaheadRef = useRef(null);
@@ -65,13 +129,17 @@ function SubmitRecipe(){
     // onChange handler to check if selected ingredient exists in selected ingredients, if not, add it to the state `using '...' to add to array`
     const handleIngredientSelect = (selected) => {
         const ingredientExists = selectedIngredients.find(
-            (ingredient) => ingredient.ingredientId === selected[0].ingredientId
-        );
+        (ingredient) => ingredient.ingredientId === selected[0].ingredientId);
         if (!ingredientExists) {
-            dispatch(setSelectedIngredients(selected));
+        dispatch(setSelectedIngredients(selected));
+        setRecipe((prevRecipe) => ({
+            ...prevRecipe,
+            ingredients: [...prevRecipe.ingredients, selected[0].ingredientId]
+        }));
         }
         typeaheadRef.current.clear(); // Clear the input field
     };
+        
 
     // onClick handler to check if ingredientId exists in selected ingredients, then if it does, removes it from the selectedIngredients state
     const handleIngredientDelete = (ingredientId) => {
@@ -82,91 +150,102 @@ function SubmitRecipe(){
           dispatch(deleteSelectedIngredient(ingredientToDelete));
         }
       };
-
-    //   function postRecipe () {
-    //     useEffect(()=> {
-    //         axios.post('http://34.210.179.63:8008/Recipes', {
-    //           headers: {
-    //             'Content-Type': 'application/json'
-    //           },
-    //           body: {
-
-    //           }
-    //         })
-    //         .then(response => {
-    //           console.log(response.data);
-    //           dispatch(setIngredientList(response.data));
-    //         })
-    //         .catch(err => console.error(err));
-    //       },[]);
-
-    //   }
-    return(
+    return (
         <>
-
-        <Modal
+          <Modal
             open={isOpen}
-            onClose={handleCloseModal} 
+            onClose={handleCloseModal}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
-        >
-            <Box sx={modalstyle} >
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                    Post a Recipe: 
-                </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    <Form>
-                        <Form.Group>
-                            <Form.Label>Recipe Name:</Form.Label>
-                            <Form.Control type="text" placeholder="Name your recipe" style={{'--placeholder-opacity': '0.1'}}/>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Recipe Type:</Form.Label>
-                            <Form.Control as="select" defaultValue="">
+          >
+            <Box sx={modalstyle}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Post a Recipe:
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group>
+                    <Form.Label>Recipe Name:</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter recipe name"
+                      name="recipeName"
+                      value={recipe.recipeName}
+                      onChange={handleRecipeChange}
+                      required
+                    />
+                  </Form.Group>
+      
+                  <Form.Group>
+                    <Form.Label>Recipe Type:</Form.Label>
+                            <Form.Control
+                                as="select"
+                                name="recipeType"
+                                value={recipe.recipeType}
+                                onChange={handleRecipeChange}
+                                required>
                                 <option  style={{opacity: '0.1' }}value="" disabled selected>Select one</option>
                                 <option value="breakfast">Breakfast</option>
                                 <option value="lunch">Lunch</option>
                                 <option value="dinner">Dinner</option>
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group>
+                    </Form.Control>
+                  </Form.Group>
+      
+                  <Form.Group>
                             <Form.Label></Form.Label>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Ingredient List:</Form.Label>
-                            <Typeahead
+                    <Typeahead
                                 id="ingredient-list"
                                 labelKey="ingredientName"
                                 options={ingredientList}
                                 placeholder="Enter ingredients"
                                 onChange={handleIngredientSelect}
                                 ref={typeaheadRef}
-                            />
+                    />
                             <div style={{ marginTop: 20 }}>
-                                {selectedIngredients.map((ingredient) => (
+                      {selectedIngredients.map((ingredient) => (
                                 <span key={ingredient.ingredientId} className="badge badge-primary" style={{ marginRight: 5, color: 'black' }}>
-                                    {ingredient.ingredientName}
-                                    <button style={{border:'none',backgroundColor:'white'}} type="button" className="close"  onClick={() => handleIngredientDelete(ingredient.ingredientId)}><HighlightOffIcon style={{color:'gray'}} fontSize="small"/> </button>
-                                </span>
-                                ))}
-                            </div>
-                            </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Recipe Instructions:</Form.Label>
-                            <Form.Control style={{ height: '200px','--placeholder-opacity': '0.5'}} as="textarea" placeholder="Enter instructions chronologically (include accurate measurements, timestamps, and supplies...)" />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Upload Image:</Form.Label>
-                            <Dropzone/>
-                        </Form.Group>
+                          {ingredient.ingredientName}
+                          <HighlightOffIcon
+                            className="ms-1"
+                            onClick={() =>
+                              handleIngredientDelete(ingredient.ingredientId)
+                            }
+                          />
+                        </span>
+                      ))}
+                    </div>
+                  </Form.Group>
+      
+                  <Form.Group>
+                    <Form.Label>Recipe Instructions:</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      style={{ height: '200px','--placeholder-opacity': '0.5'}}
+                      placeholder='Enter instructions chronologically, including accurate measurements, timestamps, and supplies'
+                      rows={3}
+                      name='description'
+                      value={recipe.description}
+                      onChange={handleRecipeChange}
+                      required
+                    />
+                  </Form.Group>
+      
+                  <Form.Group>
+                    <Dropzone setRecipe={setRecipe} />
+                  </Form.Group>
                         <br></br>
-                        <Button style={{ backgroundColor: "#CD5C5C", borderColor: "#CD5C5C" }} >Submit</Button>
-                    </Form>
-                </Typography>
+                        <Form.Group>
+                          <Button type='submit' style={{ backgroundColor: '#CD5C5C', borderColor: `#CD5C5C` }} >Submit</Button>
+                        </Form.Group>
+                </Form>
+              </Typography>
             </Box>
-        </Modal>
+          </Modal>
         </>
-    )
+      );
 }
 
 export default SubmitRecipe;

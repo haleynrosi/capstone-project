@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { Modal, Box, Typography } from "@mui/material";
 import { Card, Form, Button } from 'react-bootstrap';
 import SubmitRecipe from "./SubmitRecipe";
-import {alterID, alterLogin, resetLogin} from '../actions/alterUser'
+import { alterLogin, resetLogin} from '../actions/alterUser'
 import { useDispatch } from "react-redux";
 import MyDashboard from "./MyDashboard";
 import { resetID } from '../actions/alterUser';
@@ -47,6 +47,7 @@ function NavBar() {
     const [openNestedModal, setOpenNestedModal] = useState(false);
     const [username, setUsername] = useState('');
     const [newUser, setNewUser] = useState({
+        userID:null,
         username: "",
         email: "",
         password: "",
@@ -80,21 +81,26 @@ function NavBar() {
     const userLogin = async () => {
         let fetchUser = await fetch(`http://34.210.179.63:8008/Users/username/${username}`, {
             headers:{
-                'api-key': 'DigtalCrafts'
+                'api-key': 'DigtalCrafts',
+                'Content-Type': 'application/json'
+               
             }
-        });
+        })
         await fetchUser.json()
-            .then((data) => {
-                console.log(data)
-                dispatch(alterLogin({
-                    userID: data.userId,
-                    loggedIn: true,
-                    username: data.username,
-                    email: data.email,
-                    firstName: data.firstName,
-                    lastName: data.lastName
-                })) 
-            })
+        .then((data) => {
+            console.log(data)
+          
+            dispatch(alterLogin({
+                userID: data.userId,
+                loggedIn: true,
+                username: data.username,
+                email: data.email,
+                firstName: data.firstName,
+                lastName: data.lastName
+            }))
+         
+        });
+  
     }
 
     useEffect(()=>{
@@ -108,10 +114,10 @@ function NavBar() {
     };
 
     const createUser = async () => {
-        await axios.post('http://34.210.179.63:8008/Users', {
+        await ('http://34.210.179.63:8008/Users', {
              headers: {
                  'Content-Type': 'application/json',
-                 'api-key': 'DigitalCrafts'
+                 'api-key': 'DigtalCrafts'
              }
          })
          .then(response => {

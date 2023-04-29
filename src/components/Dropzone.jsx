@@ -1,15 +1,34 @@
 import { useDropzone } from 'react-dropzone';
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSelectedFile } from '../actions/dropzoneSlice';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
-
+import axios from 'axios';
 
 function Dropzone() {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const dispatch = useDispatch();
+  const selectedFile = useSelector((state => state.dropzone.selectedFile));
+  // const setFileData = useState()
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: (acceptedFile) => {
-      setSelectedFile(acceptedFile[0]);
+      const name = acceptedFile[0].name
+      dispatch(setSelectedFile(name));
+      const formData = new FormData();
+      formData.append('file', acceptedFile[0]);
+
+      axios.post('http://34.210.179.63:8008/Images/upload', formData, {
+          headers:{
+            'api-key':'DigtalCrafts',
+            'Content-Type':'multipart/form-data'
+          }
+      })
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(err => {
+          console.error(err);
+        });
     }
   });
 
@@ -19,8 +38,8 @@ function Dropzone() {
       {selectedFile ? (
         <div >
           <UploadFileIcon className='file-upload' />
-          <p className='file-upload'>{selectedFile.name}</p>
-          <img style={{maxWidth:'200px',maxHeight:'200px'}} src={URL.createObjectURL(selectedFile)} alt='Preview' />
+          <p className='file-upload'>{selectedFile}</p>
+          {/* <img style={{maxWidth:'200px',maxHeight:'200px'}} src={URL.createObjectURL({formData})} alt='Preview' /> */}
         </div>
       ) : (
         <div>

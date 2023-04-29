@@ -26,7 +26,6 @@ const initialState = {
             state.userLogin.lastName = action.payload.lastName;
         }, 
         resetLogin: (state) =>{
-            state.userLogin.userID = null
             state.userLogin.loggedIn = false
             state.userLogin.username = null;
             state.userLogin.email = null;
