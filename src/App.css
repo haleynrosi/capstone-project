@@ -1,14 +1,16 @@
-
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans&display=swap');
 
 
 .App {
   width: 100vw;
   height: 100vh;
+  font-family: 'DM Sans', sans-serif;
 }
 
 body {
   margin:0;
   padding: 0;
+
 }
 
 .sidebar-content{
@@ -30,4 +32,21 @@ color: red;
 .file-upload{
   cursor: pointer;
 
+}
+
+.recipeSubmitBtns{
+  display:flex;
+  justify-content: center;
+  column-gap: 1cm;;
+}
+
+.submitForm{
+  display:flex;
+  flex-direction: column;
+  row-gap:0.5cm;
+}
+
+.fileSelect{
+  display:flex;
+  flex-direction: column;
 }

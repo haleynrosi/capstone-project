@@ -12,7 +12,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 
 //reducer imports
-import { closeSRModal, selectIsModalOpen, handleMessage, handleImageUpload } from '../actions/SubmitRecipeModalSlice';
+import { closeSRModal, selectIsModalOpen, handleMessage } from '../actions/SubmitRecipeModalSlice';
 import { setIngredientList, resetSelectedIngredients, setSelectedIngredients, deleteSelectedIngredient } from '../actions/IngredientsSlice';
 
 
@@ -21,10 +21,13 @@ import { setIngredientList, resetSelectedIngredients, setSelectedIngredients, de
 
 // submit recipe modal form
 function SubmitRecipe(){
+
+  
   
       //modal state
     const isOpen = useSelector(selectIsModalOpen);
     const dispatch = useDispatch();
+ 
             
     //form data selectors
     const loginSelector = useSelector(state => state.alterUser.userLogin)
@@ -104,7 +107,7 @@ function SubmitRecipe(){
             });
 
             dispatch(handleMessage("Your recipe posted successfully!"));
-            dispatch(setSelectedFile(null));
+            
             handleCloseModal();
 
           }).catch((err) => {
@@ -112,15 +115,7 @@ function SubmitRecipe(){
             dispatch(handleMessage("Please fill in all required fields"));
           })
       };
-      
-      
-
     
-
-
-
-  
-
     //API call for ingredientList
     useEffect(()=> {
         axios.get('http://34.210.179.63:8008/Ingredients', {
@@ -177,7 +172,7 @@ function SubmitRecipe(){
                 Post a Recipe:
               </Typography>
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                <Form>
+                <Form className="submitForm">
                   <Form.Group>
                     <Form.Label><span style={{ color: "gray" }}>*</span> Recipe Name:</Form.Label>
                     <Form.Control
@@ -255,10 +250,10 @@ function SubmitRecipe(){
                   </Form.Group>
       
                   <Form.Group>
-                    {dispatch(handleImageUpload()) && <Dropzone />}
+                   <Dropzone />
                   </Form.Group>
                   <br></br>
-                  <Form.Group>
+                  <Form.Group className ='recipeSubmitBtns'>
                     <Button
                       variant="primary"
                       onClick={handleSubmit}
@@ -270,13 +265,13 @@ function SubmitRecipe(){
                     >
                       Submit
                     </Button>
-                    {/* <Button
+                    <Button
                       variant="secondary"
                       onClick={handleCloseModal}
                       style={{ backgroundColor: '#CD5C5C', borderColor: `#CD5C5C` }}
                     >
                       <HighlightOffIcon />
-                    </Button> */}
+                    </Button>
                   </Form.Group>
                 </Form>
                 
