@@ -16,11 +16,13 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { userLoginSelector, firstNameSelector } from '../actions/alterUser';
 import { openSRModal } from '../actions/SubmitRecipeModalSlice';
+import SubmitMessage from './SubmitMessage';
 
 
 function NavBar() {
 
     const loginSelector = useSelector(state => state.alterUser.userLogin)
+    const messageSelector = useSelector(state=> state.submitRecipe.message);
 
     const dispatch = useDispatch(); // just lets us use the actions aka alterId - operates as a function and just needs help being used here bc of redux
 
@@ -179,7 +181,9 @@ return (
                                     <NavLink onClick={openRecipeModal} className='nav-link' style={{ textDecoration: 'none', color: 'white', fontSize: 16 }} activeClassName='activeClicked'>
                                         {collapsed ? <FormatListBulleted style={{ fontSize: 20 }} /> : <div><FormatListBulleted style={{ fontSize: 20 }} /><span> Submit a Recipe</span></div>}
                                         {<SubmitRecipe />}
+                                        
                                     </NavLink>
+                                    {messageSelector && <SubmitMessage/>}
                                     <li>
                                         <NavLink onClick={userLogout} exact to='/' className='nav-link' style={{ textDecoration: 'none', color: 'white', fontSize: 16 }} activeClassName='activeClicked'>
                                             {collapsed ? <Logout style={{ fontSize: 20 }} /> : <div><Logout style={{ fontSize: 20 }} /><span> Logout</span></div>}

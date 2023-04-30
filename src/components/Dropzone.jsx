@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedFile } from '../actions/dropzoneSlice';
@@ -7,24 +8,26 @@ import axios from 'axios';
 function Dropzone() {
   const dispatch = useDispatch();
   const selectedFile = useSelector((state => state.dropzone.selectedFile));
-  // const setFileData = useState()
+  const [filePreview, setFilePreview] = useState(null);
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: (acceptedFile) => {
-      const name = acceptedFile[0].name
+      const name = acceptedFile[0].name;
       dispatch(setSelectedFile(name));
+      setFilePreview(URL.createObjectURL(acceptedFile[0]));
       const formData = new FormData();
       formData.append('file', acceptedFile[0]);
-
+  
       axios.post('http://34.210.179.63:8008/Images/upload', formData, {
           headers:{
             'api-key':'DigtalCrafts',
             'Content-Type':'multipart/form-data'
           }
-      })
+        })
         .then(res => {
           console.log(res.data);
+          setFilePreview(URL.createObjectURL(acceptedFile[0]));
         })
         .catch(err => {
           console.error(err);
@@ -33,13 +36,13 @@ function Dropzone() {
   });
 
   return (
-    <div  {...getRootProps()}>
+    <div {...getRootProps()}>
       <input {...getInputProps()} />
       {selectedFile ? (
-        <div >
+        <div>
           <UploadFileIcon className='file-upload' />
           <p className='file-upload'>{selectedFile}</p>
-          {/* <img style={{maxWidth:'200px',maxHeight:'200px'}} src={URL.createObjectURL({formData})} alt='Preview' /> */}
+          {filePreview && <img style={{maxWidth:'200px',maxHeight:'200px'}} src={filePreview} alt='Preview' />}
         </div>
       ) : (
         <div>
@@ -50,5 +53,6 @@ function Dropzone() {
     </div>
   );
 }
+
 
 export default Dropzone;
