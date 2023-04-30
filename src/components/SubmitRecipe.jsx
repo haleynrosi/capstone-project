@@ -7,11 +7,13 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import { useSelector, useDispatch } from "react-redux";
 import axios from 'axios';
 import  Dropzone from './Dropzone'
+import { setSelectedFile } from '../actions/dropzoneSlice';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
+
 //reducer imports
-import { closeSRModal, selectIsModalOpen } from '../actions/SubmitRecipeModalSlice';
-import { setIngredientList, setSelectedIngredients, deleteSelectedIngredient } from '../actions/IngredientsSlice';
+import { closeSRModal, selectIsModalOpen, handleMessage, handleImageUpload } from '../actions/SubmitRecipeModalSlice';
+import { setIngredientList, resetSelectedIngredients, setSelectedIngredients, deleteSelectedIngredient } from '../actions/IngredientsSlice';
 
 
 
@@ -19,13 +21,30 @@ import { setIngredientList, setSelectedIngredients, deleteSelectedIngredient } f
 
 // submit recipe modal form
 function SubmitRecipe(){
-
+  
       //modal state
-      const isOpen = useSelector(selectIsModalOpen);
+    const isOpen = useSelector(selectIsModalOpen);
+    const dispatch = useDispatch();
+            
+    //form data selectors
+    const loginSelector = useSelector(state => state.alterUser.userLogin)
+    const selectedFile = useSelector((state => state.dropzone.selectedFile));
+    //ingredient selectors
+    const ingredientList = useSelector(state => state.ingredientList);
+    const selectedIngredients = useSelector(state => state.selectedIngredients);
     
-      const handleCloseModal = () => {
-          dispatch(closeSRModal());
-      }
+
+    const handleCloseModal = (event) => {  
+
+      setRecipe({
+        recipeName: "",
+        recipeType:"",
+        ingredients:[],
+        description:"",
+      });
+      dispatch(resetSelectedIngredients());
+      dispatch(closeSRModal());
+    }
 
     const modalstyle = {
         position: 'absolute',
@@ -41,6 +60,7 @@ function SubmitRecipe(){
         p: 4,
     };
 
+    
     const [recipe, setRecipe] = useState({
         recipeName: "",
         recipeType:"",
@@ -51,28 +71,16 @@ function SubmitRecipe(){
 
     const handleRecipeChange = (event) => {
         const { name, value } = event.target;
+   
         setRecipe((prevRecipe) => ({
           ...prevRecipe,
           [name]: value
         }));
       };
 
-      
-    const selectedFile = useSelector((state => state.dropzone.selectedFile));
-
-    const loginSelector = useSelector(state => state.alterUser.userLogin)
-
-    //ingredient selectors
-    const ingredientList = useSelector(state => state.ingredientList);
-    const selectedIngredients = useSelector(state => state.selectedIngredients);
-
-    const dispatch = useDispatch();
-
-    const handleSubmit = (event) => {
-      console.log(recipe)
+      const handleSubmit = async (event) => {
         event.preventDefault();
-       
-        
+      
         axios.post("http://34.210.179.63:8008/Recipes", {
           recipeName: recipe.recipeName,
           recipeType: recipe.recipeType,
@@ -80,26 +88,32 @@ function SubmitRecipe(){
           description: recipe.description,
           owner: loginSelector.userID,
           imageName: selectedFile
-      }, {
+        }, {
           headers: {
-              "Content-Type": "application/json",
-              "api-key": "DigtalCrafts"
+            "Content-Type": "application/json",
+            "api-key": "DigtalCrafts"
           }
-      })
-        .then(() => {
-            // reset the form and close the modal
-        setRecipe({
-            recipeName: "",
-            recipeType:"",
-            ingredients:[],
-            description:"",
-        });
-        
-            dispatch(setSelectedIngredients([]));
+        })
+          .then(() => {
+            // reset the form and display success message
+            setRecipe({
+              recipeName: "",
+              recipeType: "",
+              ingredients: [],
+              description: "",
+            });
+
+            dispatch(handleMessage("Your recipe posted successfully!"));
+            dispatch(setSelectedFile(null));
             handleCloseModal();
 
-        }).catch((err) => console.error(err));
-    };
+          }).catch((err) => {
+            console.error(err);
+            dispatch(handleMessage("Please fill in all required fields"));
+          })
+      };
+      
+      
 
     
 
@@ -150,7 +164,7 @@ function SubmitRecipe(){
           dispatch(deleteSelectedIngredient(ingredientToDelete));
         }
       };
-    return (
+      return (
         <>
           <Modal
             open={isOpen}
@@ -165,7 +179,7 @@ function SubmitRecipe(){
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 <Form>
                   <Form.Group>
-                    <Form.Label>Recipe Name:</Form.Label>
+                    <Form.Label><span style={{ color: "gray" }}>*</span> Recipe Name:</Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Enter recipe name"
@@ -177,36 +191,43 @@ function SubmitRecipe(){
                   </Form.Group>
       
                   <Form.Group>
-                    <Form.Label>Recipe Type:</Form.Label>
-                            <Form.Control
-                                as="select"
-                                name="recipeType"
-                                value={recipe.recipeType}
-                                onChange={handleRecipeChange}
-                                required>
-                                <option  style={{opacity: '0.1' }}value="" disabled selected>Select one</option>
-                                <option value="breakfast">Breakfast</option>
-                                <option value="lunch">Lunch</option>
-                                <option value="dinner">Dinner</option>
+                    <Form.Label><span style={{ color: "gray" }}>*</span> Recipe Type:</Form.Label>
+                    <Form.Control
+                      as="select"
+                      name="recipeType"
+                      value={recipe.recipeType}
+                      onChange={handleRecipeChange}
+                      required
+                    >
+                      <option style={{ opacity: '0.1' }} value="" disabled selected>
+                        Select one
+                      </option>
+                      <option value="breakfast">Breakfast</option>
+                      <option value="lunch">Lunch</option>
+                      <option value="dinner">Dinner</option>
                     </Form.Control>
                   </Form.Group>
       
                   <Form.Group>
-                            <Form.Label></Form.Label>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Ingredient List:</Form.Label>
+                    <Form.Label></Form.Label>
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Label><span style={{ color: "gray" }}>*</span> Ingredient List:</Form.Label>
                     <Typeahead
-                                id="ingredient-list"
-                                labelKey="ingredientName"
-                                options={ingredientList}
-                                placeholder="Enter ingredients"
-                                onChange={handleIngredientSelect}
-                                ref={typeaheadRef}
+                      id="ingredient-list"
+                      labelKey="ingredientName"
+                      options={ingredientList}
+                      placeholder="Enter ingredients"
+                      onChange={handleIngredientSelect}
+                      ref={typeaheadRef}
                     />
-                            <div style={{ marginTop: 20 }}>
+                    <div style={{ marginTop: 20 }}>
                       {selectedIngredients.map((ingredient) => (
-                                <span key={ingredient.ingredientId} className="badge badge-primary" style={{ marginRight: 5, color: 'black' }}>
+                        <span
+                          key={ingredient.ingredientId}
+                          className="badge badge-primary"
+                          style={{ marginRight: 5, color: 'black' }}
+                        >
                           {ingredient.ingredientName}
                           <HighlightOffIcon
                             className="ms-1"
@@ -223,10 +244,10 @@ function SubmitRecipe(){
                     <Form.Label>Recipe Instructions:</Form.Label>
                     <Form.Control
                       as="textarea"
-                      style={{ height: '200px','--placeholder-opacity': '0.5'}}
-                      placeholder='Enter instructions chronologically, including accurate measurements, timestamps, and supplies'
+                      style={{ height: '200px', '--placeholder-opacity': '0.5' }}
+                      placeholder="Enter instructions chronologically, including accurate measurements, timestamps, and supplies"
                       rows={3}
-                      name='description'
+                      name="description"
                       value={recipe.description}
                       onChange={handleRecipeChange}
                       required
@@ -234,17 +255,36 @@ function SubmitRecipe(){
                   </Form.Group>
       
                   <Form.Group>
-                    <Dropzone setRecipe={setRecipe} />
+                    {dispatch(handleImageUpload()) && <Dropzone />}
                   </Form.Group>
-                        <br></br>
-                        <Form.Group>
-                          <Button onClick={handleSubmit} style={{ backgroundColor: '#CD5C5C', borderColor: `#CD5C5C` }} >Submit</Button>
-                        </Form.Group>
+                  <br></br>
+                  <Form.Group>
+                    <Button
+                      variant="primary"
+                      onClick={handleSubmit}
+                      style={{
+                        backgroundColor: 'white',
+                        color: '#CD5C5C',
+                        borderColor: `#CD5C5C`,
+                      }}
+                    >
+                      Submit
+                    </Button>
+                    {/* <Button
+                      variant="secondary"
+                      onClick={handleCloseModal}
+                      style={{ backgroundColor: '#CD5C5C', borderColor: `#CD5C5C` }}
+                    >
+                      <HighlightOffIcon />
+                    </Button> */}
+                  </Form.Group>
                 </Form>
+                
               </Typography>
             </Box>
           </Modal>
-        </>
+          
+        </>   
       );
 }
 

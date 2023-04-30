@@ -19,14 +19,18 @@ const selectedIngredientsSlice = createSlice({
         },
         deleteSelectedIngredient: (state, action) => {
             return state.filter(ingredient => ingredient.ingredientId !== action.payload.ingredientId)
-          }
+          },
+          resetSelectedIngredients: () => {
+            return []
+       },
     }
+    
 });
 
 export const ingredientListSelector = (state) => state.ingredientList;
 export const selectedIngredientsSelector = (state) => state.selectedIngredients;
 
 export const { setIngredientList } = ingredientListSlice.actions;
-export const { setSelectedIngredients, deleteSelectedIngredient } = selectedIngredientsSlice.actions;
+export const { setSelectedIngredients, deleteSelectedIngredient, resetSelectedIngredients } = selectedIngredientsSlice.actions;
 
 export default [ingredientListSlice.reducer, selectedIngredientsSlice.reducer]

@@ -13,7 +13,8 @@ const reducer = combineReducers({
     dropzone: dropzoneReducer,
     
     ingredientList: ingredientListReducers[0],
-    selectedIngredients: ingredientListReducers[1]
+    selectedIngredients: ingredientListReducers[1],
+    resetSelectedIngredients: ingredientListReducers[2]
 })
 
 export const store = configureStore({
