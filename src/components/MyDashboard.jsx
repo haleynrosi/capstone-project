@@ -46,9 +46,11 @@ const MyDashboard = () => {
         
         <Col>
         <Card>
-                <Card.Title>Your Grocery List</Card.Title>
+                <Card.Title>Your Recipes</Card.Title>
                 <Card.Body></Card.Body>
+                <Button>Delete Recipe</Button>
             </Card>
+
         </Col>
         <Col>
             <Button onClick={ openRecipeModal }>Submit a recipe to TraderRecipes!</Button>
