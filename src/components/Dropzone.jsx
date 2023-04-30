@@ -50,7 +50,7 @@ function Dropzone() {
         </div>
       ) : (
         <div>
-          <p>Image Upload</p>
+          <p>Image Upload:</p>
           <UploadFileIcon className='file-upload' />
           <p className='file-upload'></p>
         </div>
