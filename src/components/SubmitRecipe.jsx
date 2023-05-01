@@ -20,10 +20,7 @@ import { setIngredientList, resetSelectedIngredients, setSelectedIngredients, de
 
 
 // submit recipe modal form
-function SubmitRecipe(){
-
-  
-  
+function SubmitRecipe(){ 
       //modal state
     const isOpen = useSelector(selectIsModalOpen);
     const dispatch = useDispatch();
