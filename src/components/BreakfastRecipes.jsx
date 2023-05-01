@@ -14,6 +14,7 @@ function BreakfastRecipes() {
     const [imageIndex, setImageIndex] = useState(0)
     const [searchBreakfastOption, setSearchBreakfastOption] = useState('Search by');
     const [recipes, setRecipes] = useState([]); // all the breakfast recipes are stored here
+    const [recipesWithImages, setRecipeswithImages] = useState([]);
    
 
   
@@ -38,47 +39,73 @@ function BreakfastRecipes() {
     }
 
   
-useEffect(()=>{
-    axios.get(`http://34.210.179.63:8008/Recipes/type/breakfast`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'api-key': 'DigtalCrafts'
-        }
-    }
-    ).then((response) =>{
-        // console.log(response.data)
-        setRecipes(response.data)
-        
-      
-    }).then(()=>{
-
-    })
-    .catch(error=>
-        console.log(error))
-
-}, []);
-const updateRecipes = async () => {
-    try {
-      const updatedRecipes = await Promise.all(
-        recipes.map(async (recipe) => {
-          const response = await axios.get(`http://34.210.179.63:8008/Images/${recipe.imageName}`, {
+    useEffect(() => {
+        axios
+          .get("http://34.210.179.63:8008/Recipes/type/breakfast", {
             headers: {
-              'Accept': 'image/*',
-              'Access-Control-Allow-Origin': '*',
-              'api-key': 'DigtalCrafts'
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "api-key": "DigtalCrafts",
             },
-            responseType: 'blob'
-          });
-          const imageUrl = URL.createObjectURL(response.data);
-          return { ...recipe, image: imageUrl };
-        })
-      );
-      setRecipes(updatedRecipes);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+          })
+          .then((response) => {
+            setRecipes(response.data); // Set the state to the data property of the response object
+          })
+          .catch((error) => console.log(error));
+      }, []);
+
+      useEffect(() => {
+        const fetchImages = async () => {
+          const updatedRecipes = [];
+          for (const recipe of recipes) {
+            try {
+              const response = await axios.get(
+                `http://34.210.179.63:8008/Images/${recipe.imageName}`,
+                {
+                  headers: {
+                    "Content-Type": "text/html",
+                    "Access-Control-Allow-Origin": "*",
+                    "api-key": "DigtalCrafts",
+                  },
+                }
+              );
+      
+              // Update the recipe object with the image data
+              const updatedRecipe = {
+                ...recipe,
+                image: response.data,
+              };
+              updatedRecipes.push(updatedRecipe);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+      
+          // Set the state with the updated copy of the recipes array
+          setRecipeswithImages(updatedRecipes);
+          console.log(recipesWithImages)
+        };
+        fetchImages();
+      
+      }, [recipes]);
+
+
+
+
+// const updateRecipes = async () => {
+//     try {
+//       const updatedRecipes = await Promise.all(
+//         recipes.map(async (recipe) => {
+//           const imageUrl = await 
+//           return { ...recipe, image: imageUrl };
+
+//         })
+//       );
+//       setRecipes(updatedRecipes);
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
 
 
 
@@ -87,9 +114,9 @@ const updateRecipes = async () => {
 
 
   
-  useEffect(() => {
-    updateRecipes();
-  }, []);
+//   useEffect(() => {
+//     updateRecipes();
+//   }, []);
   
 
  
@@ -174,7 +201,7 @@ const updateRecipes = async () => {
                     <Card.Title>Popular Breakfast Recipes</Card.Title>
                     <Card.Body>
                         <Carousel activeIndex={imageIndex} onSelect={handleImgChange}>
-                            {recipes.map((recipe, i) => (
+                            {recipesWithImages.map((recipe, i) => (
                                 <Carousel.Item key={i}>
                                     <img style={{maxWidth: 400}}
                                         className="w-100 p-50"
