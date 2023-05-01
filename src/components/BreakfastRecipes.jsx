@@ -47,7 +47,7 @@ useEffect(()=>{
         }
     }
     ).then((response) =>{
-        console.log(response.data)
+        // console.log(response.data)
         setRecipes(response.data)
         
       
@@ -62,9 +62,17 @@ const updateRecipes = async () => {
     try {
       const updatedRecipes = await Promise.all(
         recipes.map(async (recipe) => {
-          const response = await fetch(`http://34.210.179.63:8008/Images/${recipe.imageName}`);
-          const imageData = await response.text();
-          return { ...recipe, image: imageData };
+          const response = await fetch(`http://34.210.179.63:8008/Images/${recipe.imageName}`,{
+            headers: {
+                'Accept': 'image/*',
+                'Access-Control-Allow-Origin': '*',
+                'Cache-Control': 'no-cache',
+                'api-key': 'DigtalCrafts'
+            }
+          });
+          const blob = await response.blob();
+          const imageUrl = URL.createObjectURL(blob);
+          return { ...recipe, image: imageUrl };
         })
       );
       setRecipes(updatedRecipes);
@@ -72,11 +80,10 @@ const updateRecipes = async () => {
       console.log(error);
     }
   };
-  
+    
   useEffect(() => {
     updateRecipes();
   }, []);
-    
   
 
  
