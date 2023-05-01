@@ -62,16 +62,15 @@ const updateRecipes = async () => {
     try {
       const updatedRecipes = await Promise.all(
         recipes.map(async (recipe) => {
-          const response = await fetch(`http://34.210.179.63:8008/Images/${recipe.imageName}`,{
+          const response = await axios.get(`http://34.210.179.63:8008/Images/${recipe.imageName}`, {
             headers: {
-                'Accept': 'image/*',
-                'Access-Control-Allow-Origin': '*',
-                'Cache-Control': 'no-cache',
-                'api-key': 'DigtalCrafts'
-            }
+              'Accept': 'image/*',
+              'Access-Control-Allow-Origin': '*',
+              'api-key': 'DigtalCrafts'
+            },
+            responseType: 'blob'
           });
-          const blob = await response.blob();
-          const imageUrl = URL.createObjectURL(blob);
+          const imageUrl = URL.createObjectURL(response.data);
           return { ...recipe, image: imageUrl };
         })
       );
@@ -80,7 +79,14 @@ const updateRecipes = async () => {
       console.log(error);
     }
   };
-    
+
+
+
+
+
+
+
+  
   useEffect(() => {
     updateRecipes();
   }, []);
@@ -160,7 +166,7 @@ const updateRecipes = async () => {
 
                     <Card className="breakfastRecipeDiv" style={{ margin: 20, border: 'none' }}>
                         <Card.Title style={{ textAlign: 'center' }}></Card.Title>
-                        <Card.Img style={{ display: 'none' }}></Card.Img>
+                        {/* <Card.Img style={{ display: 'none' }}></Card.Img> */}
                     </Card>
 
                 </div>
