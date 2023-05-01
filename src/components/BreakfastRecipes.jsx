@@ -4,49 +4,54 @@ import axios from "axios";
 import { useState } from "react";
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 import {Typeahead} from "react-bootstrap-typeahead";
-import { Button, Form, Row, Card, Dropdown, DropdownButton, InputGroup, FormControl, Carousel } from "react-bootstrap";
+import { Button, Form, Row, Col, Card, Dropdown, DropdownButton, InputGroup, FormControl, Carousel } from "react-bootstrap";
 import { selectClasses } from "@mui/material";
+import RecipeModal from "./RecipeModal";
 
 
 
 function BreakfastRecipes() {
 
-    const [imageIndex, setImageIndex] = useState(0)
-    const [searchBreakfastOption, setSearchBreakfastOption] = useState('Search by');
-    const [recipes, setRecipes] = useState([]);
-    const [recipeSearch, setRecipeSearch] = useState({
+    const [imageIndex, setImageIndex] = useState(0)//sets index of each response recieved and put on the Carousel
+    const [recipeModalOpen, setRecipeModalOpen] = useState(false) //sets the state of the modal that appears when a recipe is clicked
+    const [searchBreakfastOption, setSearchBreakfastOption] = useState('Search by');//sets search by ingredient or recipe name
+    const [recipes, setRecipes] = useState([]); // sets all the breakfast recipes to recipes - all are stored here
+    const [searchResults, setSearchResults] = useState({ //sets the state for the specific searched recipe 
         recipeName: '',
-        recipeImg: null,
-        recipeInfo: null
+        recipeImage: null,
+        recipeInfo: ''
     })
-    
-    
-    let recipeImage = recipes? recipes.imageName : null;
 
-
-
-    const typeaheadRef = useRef(null);
-
-    const handleImgChange = (selectedImgIndex, e) => {
-        setImageIndex(selectedImgIndex)
+    //opens the recipe modal when you click on a picture in the carousel
+    const openRecipeModal = () => {
+        setRecipeModalOpen(true)
     }
 
+    //these two are for the typeahead and the dropdown search function
+    const typeaheadRef = useRef(null);
     const searchOptionDropdown = (searchOption) => {
         setSearchBreakfastOption(searchOption)
     }
 
+
+    //this function sets the search results state and allows for the recipe card with the name and img to appear - when you click the card the modal will access the info as well
     const searchBreakfastRecipes = (selectedOption) => {
-       setRecipeSearch({
-        ...recipeSearch,
-        recipeName: selectedOption.recipeName,
-        recipeImg: selectedOption.imageName
-       })
-       console.log(recipeSearch)
+        if(selectedOption){
+            setSearchResults({
+                recipeName:selectedOption.recipeName,
+                recipeImage: selectedOption.imageName,
+                recipeInfo: selectedOption.description
+
+               }
+            )
+        }
+      
+       console.log(selectedOption)
     
        
     }
 
-  
+//gets all the breakfast recipes and sets recipes to the data
 useEffect(()=>{
     axios.get(`http://34.210.179.63:8008/Recipes/type/breakfast`, {
         headers: {
@@ -68,13 +73,35 @@ useEffect(()=>{
 
 }, [])
   
-
+//gets the image based on the imageName stored in recipes and adds it to original json
+useEffect(()=>{
+    recipes.forEach((recipe)=>{
+      fetch(`http://34.210.179.63:8008/Images/${recipe.imageName}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'api-key': 'DigtalCrafts'
+        }
+      })
+      .then((response)=>{
+        setRecipes(response.data)
+      })
+      .then(response => response.blob())
+      .then(blob => {
+        recipe.image = URL.createObjectURL(blob);
+      })
+      .catch(error=>{
+        console.log(error)
+      })
+      ;
+    });
+  }, []);
             
     
   
 
  
-
+//searches by ingredient to get the ingredient Id and associate that with the corresponding recipes
     const searchRecipeByIngredient =  () => {
         axios.get(`http://34.210.179.63:8008/Ingredients/name/`, {
             headers: {
@@ -104,27 +131,14 @@ useEffect(()=>{
                 console.log(error))
     }
 
-    const displayImage = (imageAPI) =>{
-        axios.get(`http://34.210.179.63:8008/Images/${imageAPI}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'api-key': 'DigtalCrafts'
-            }
-        })
-        .then((response)=>{
-            setRecipeSearch({
-                ...recipeSearch,
-                recipeImg: response
-            })
-        }).catch(error=>{
-            console.log(error)
-        })
+
+
+ 
+
+    //this is the index change handling function for the carousel - it set the index for the next image in the carousel
+    const handleImgChange = (selectedImgIndex, e) => {
+        setImageIndex(selectedImgIndex)
     }
-
-
-
-
 
 
     return (
@@ -156,9 +170,16 @@ useEffect(()=>{
                       
                     </InputGroup>
 
-                    <Card className="breakfastRecipeDiv" style={{ margin: 20, border: 'none' }}>
-                        <Card.Title style={{ textAlign: 'center' }}>{recipeSearch? recipeSearch.recipeName : 'recipes loading...'}</Card.Title>
-                        <Card.Img style={{ display: 'none' }} src={recipeSearch.recipeImg}></Card.Img>
+                    <Card className="breakfastRecipeDiv" style={{  margin: 20, border: 'none' }}>
+                        <Card.Title style={{ textAlign: 'center' }}>{searchResults.recipeName}</Card.Title>
+                        <Row>
+                            <Col>
+                            <Card.Img style={{ display: 'none' }} src={searchResults.recipeImage}></Card.Img>
+                            </Col>
+                            <Col>
+                            <Card.Body style={{fontSize:15}}>{searchResults.recipeInfo}</Card.Body>
+                            </Col>
+                        </Row>
                     </Card>
 
                 </div>
@@ -170,11 +191,9 @@ useEffect(()=>{
                                 <Carousel.Item key={i}>
                                     <img style={{maxWidth: 400}}
                                         className="w-100 p-50"
-                                        src={recipe.imageName}
+                                        src={recipe.image}
                                         alt={recipe.recipeName}
-                                        onClick={() => {
-                                            // TODO: Implement opening the modal with the image, title, and description
-                                        }}
+                                        onClick={openRecipeModal}
                                     />
                                     <Carousel.Caption>
                                         <h5>{recipe.recipeName}</h5>
@@ -185,6 +204,7 @@ useEffect(()=>{
                         </Carousel>
                     </Card.Body>
                 </Card>
+
             </div>
 
         </div>
