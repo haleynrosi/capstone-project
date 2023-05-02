@@ -32,6 +32,7 @@ function SubmitMessage() {
     const message = useSelector(selectHandleMessage)
     let btnText="";
 
+
         if (message === "Your recipe posted successfully!"){
             btnText = "Got it!"
         }
