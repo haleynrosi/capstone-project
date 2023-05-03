@@ -15,40 +15,47 @@ function RecipeModal(props) {
     const recipeSelector = useSelector(state=> state.recipeModal.clickRecipeModal)
     const idForModal = loginSelector.userID;
     const recipeForModal = recipeSelector.recipeID
+    const favoritePutUrl = `http://34.210.179.63:8008/Favorites/user/${idForModal}/recipe/${recipeForModal}`; 
 
     const [isLiked, setIsLiked] = useState(false)
+    const recipeFavorites = {favorites:[recipeForModal]};
+      
 
+
+    const isRecipeFavorite = async () => {
+
+        try {
+          const response = await axios.put(favoritePutUrl, recipeFavorites , {
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'api-key': 'DigtalCrafts'
+            }
+          });
+      
+          console.log(response.data);
+          setIsLiked(true)
+        } catch (error) {
+          console.log(error);
+        }
+      }
    
 
+    const deleteRecipeFavorite =  async () => {
 
-    const isRecipeFavorite = () =>{
-        axios.put(`http://34.210.179.63:8008/Favorites/user/${idForModal}/recipe/${recipeForModal}`, {
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "api-key": "DigtalCrafts",
-            }
-        }).then((response)=>{
-            console.log(response)
-            setIsLiked(true)
-        }).catch(error=>{
+        try{
+            const response = await axios.delete(favoritePutUrl, recipeFavorites, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "api-key": "DigtalCrafts",
+                }
+            })
+                console.log(response.data)
+                setIsLiked(false)
+        } catch(error) {
             console.log(error)
-        })
-    }
-
-    const deleteRecipeFavorite = ()=>{
-        axios.delete(`http://34.210.179.63:8008/Favorites/user/${idForModal}/recipe/${recipeForModal}`, {
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "api-key": "DigtalCrafts",
-            }
-        }).then((response)=>{
-            console.log(response)
-            setIsLiked(false)
-        }).catch(error=>{
-            console.log(error)
-        })
+        }
     }
 
     return (
@@ -69,15 +76,15 @@ function RecipeModal(props) {
                         
                         {isLiked?
                             <Card.Link href="#" onClick={(e)=>{
-                                isRecipeFavorite()
-                            }}>
-                                <FavoriteBorder/>
-                            </Card.Link>
-                            :
-                            <Card.Link href="#" onClick={(e)=>{
                                 deleteRecipeFavorite()
                             }}>
                                 <Favorite/>
+                            </Card.Link>
+                            :
+                            <Card.Link href="#" onClick={(e)=>{
+                                isRecipeFavorite()
+                            }}>
+                                <FavoriteBorder/>
                             </Card.Link>
 
                         }
