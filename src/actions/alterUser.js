@@ -39,15 +39,7 @@ const initialState = {
 
  export const {
     alterLogin, 
-    resetLogin, 
-    alterUsername, 
-    resetUsername, 
-    alterFirstName, 
-    resetFirstName, 
-    alterEmail, 
-    resetEmail, 
-    alterLastName, 
-    resetLastName} = alterUser.actions;
+    resetLogin} = alterUser.actions;
  export const userLoginSelector = (state) => state.userLogin;
  export const usernameSelector = (state) => state.userLogin.username;
  export const emailSelector = (state) => state.userLogin.email;
