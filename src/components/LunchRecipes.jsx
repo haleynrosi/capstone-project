@@ -1,10 +1,12 @@
 import React from "react";
 import NavBar from "./NavBar";
+import '../App.css';
 import { Button, Form, Row, Card } from "react-bootstrap";
+
 
 function LunchRecipes() {
     return (
-        <div style={{ display: "flex", flexDirection: 'row' }}>
+        <div style={{ display: "flex", flexDirection: 'row' , height:'100%'}}>
             <NavBar />
             <div className="d-flex row" >
                 <div className="d-flex row" style={{padding:40}}>

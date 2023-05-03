@@ -7,6 +7,7 @@ import { openSRModal } from '../actions/SubmitRecipeModalSlice';
 import SubmitRecipe from "./SubmitRecipe";
 import { useDispatch } from "react-redux";
 
+
 const MyDashboard = () => {
     const dispatch = useDispatch();
     const openRecipeModal = () =>{
@@ -32,7 +33,7 @@ const MyDashboard = () => {
  
 
     return (
-        <div style={{ display: "flex"}}>
+        <div style={{ display: "flex", flexDirection:'row', height: '100%'}}>
             <NavBar/>
         <div>
         <h2 style={{textAlign: 'center'}}>{loginSelector.firstName}'s Dashboard</h2>

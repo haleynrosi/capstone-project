@@ -6,15 +6,12 @@ import { Card, Form, Button } from 'react-bootstrap';
 import SubmitRecipe from "./SubmitRecipe";
 import { alterLogin, resetLogin } from '../actions/alterUser'
 import { useDispatch } from "react-redux";
-import MyDashboard from "./MyDashboard";
-import { resetID } from '../actions/alterUser';
 import { LunchDining, BreakfastDining, DinnerDining, PersonOutline, AccountCircle, GridView, FormatListBulleted, Logout, Settings } from '@mui/icons-material';
 import '../App.css';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { userLoginSelector, firstNameSelector } from '../actions/alterUser';
 import { openSRModal } from '../actions/SubmitRecipeModalSlice';
 import SubmitMessage from './SubmitMessage';
 
@@ -138,8 +135,8 @@ const createUser = async () => {
 }
 
 return (
-    <div>
-        <div style={{ display: 'flex', height: '100vh', overflow: 'scroll initial', backgroundColor: '#BC8F8F' }}>
+    <body>
+        <div style={{ display: 'flex', height: '100%', overflow: 'scroll initial', backgroundColor: '#BC8F8F' }}>
             <nav textColor="white" style={{ padding: 20 }}>
                 <NavLink style={{ textDecoration: 'none', color: 'white', fontSize: 35, margin: 10 }} to='/'>
                     {collapsed ? 'Trader\nRecipes' : 'TraderRecipes'}
@@ -277,7 +274,7 @@ return (
                 </Box>
             </Modal>
         </div>
-    </div>
+    </body>
 )
 }
 

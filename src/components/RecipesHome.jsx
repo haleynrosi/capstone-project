@@ -1,6 +1,7 @@
 import React from "react";
 import NavBar from "./NavBar";
 import {Container,Row, Col, Card} from 'react-bootstrap'
+import '../App.css';
 
 function RecipesHome(){
     return(
