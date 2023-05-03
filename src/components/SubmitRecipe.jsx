@@ -12,7 +12,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 
 //reducer imports
-import { closeSRModal, selectIsModalOpen, handleMessage } from '../actions/SubmitRecipeModalSlice';
+import { closeSRModal, selectIsModalOpen, handleMessage, handleAddRecipe } from '../actions/SubmitRecipeModalSlice';
 import { setIngredientList, resetSelectedIngredients, setSelectedIngredients, deleteSelectedIngredient } from '../actions/IngredientsSlice';
 
 
@@ -94,7 +94,8 @@ function SubmitRecipe(){
             "api-key": "DigtalCrafts"
           }
         })
-          .then(() => {
+          .then((req) => {
+            dispatch(handleAddRecipe(req.body));
             // reset the form and display success message
             setRecipe({
               recipeName: "",

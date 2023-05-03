@@ -5,7 +5,8 @@ const submitRecipeModalSlice = createSlice({
     initialState: {
             message: "",
             isOpen: false,
-            imageUploadTrigger: false
+            imageUploadTrigger: false,
+            newRecipe:[]
             
     },
     
@@ -18,18 +19,23 @@ const submitRecipeModalSlice = createSlice({
         },
         handleMessage: (state, action) =>{
             state.message = action.payload;
+        },
+        handleAddRecipe:(state, action) => {
+            state.newRecipe = action.payload
         }
     }
 });
 
 export const selectIsModalOpen = (state) => state.submitRecipe.isOpen;
 
-export const selectHandleMessage = state => state.submitRecipe.message;
+export const selectHandleMessage = (state) => state.submitRecipe.message;
+
+export const selectHandleAddRecipe =(state) => state.submitRecipe.newRecipe
 
 export const {   openSRModal,
                  closeSRModal, 
                  handleMessage, 
-                 handleImageUpload, 
-                 resetImageUpload } = submitRecipeModalSlice.actions;
+                handleAddRecipe
+                  } = submitRecipeModalSlice.actions;
 
 export default submitRecipeModalSlice.reducer;
