@@ -163,11 +163,37 @@ function BreakfastRecipes() {
 
 
     return (
-        <div style={{ display: "flex", flexDirection: 'row' }}>
+        <div style={{ display: "flex",  flexDirection: 'row' }}>
             <NavBar />
-            <div className="d-flex row">
-                <div className="d-flex row" style={{ padding: 30 }}>
-                    <InputGroup style={{ margin: 20 }}>
+            <div className="d-flex row" style={{display: "flex",
+                                                justifyContent:'center', 
+                                                width:650, 
+                                                margin:15
+                                                }}>
+            <h2 style={{
+                    marginTop:25,
+                    fontSize:55,
+                    color:'rgb(188, 143, 143)', 
+                    textAlign: 'center'
+            }}>
+            Breakfast
+        </h2>
+                <div className="d-flex row" style={{display: "flex",
+                                                justifyContent:'center',
+                                                flexDirection:'column',
+                                                alignSelf:"center",
+                                                textAlign:'center', 
+                                                margin:15
+                                                }}>
+                    <h2 style={{
+                    marginTop:25,
+                    fontSize:35,
+                    color:'rgb(188, 143, 143)', 
+                    textAlign: 'center'
+            }}>
+                Search Breakfast Recipes
+                </h2>
+                    <InputGroup>
                         <Typeahead
                             id='recipe-list'
                             labelKey = 'recipeName'
@@ -197,13 +223,28 @@ function BreakfastRecipes() {
                     </Card>
 
                 </div>
-                <Card className="d-flex col " style={{ margin: 'auto', maxWidth:450 }}>
+                <Card className="d-flex col " style={{ margin: 'auto',
+                                                        height:400,
+                                                       borderWidth:3,
+                                                       maxWidth:525,
+                                                       borderColor:'rgb(188,143,143)',
+                                                       padding:20,
+                                                       textAlign:'center',
+                                                       color:'rgb(60,60,60)'
+                                                       }}>
                     <Card.Title>Popular Breakfast Recipes</Card.Title>
                     <Card.Body>
-                        <Carousel activeIndex={imageIndex} onSelect={handleImgChange}>
+                        <Carousel style={{maxWidth:525}} activeIndex={imageIndex} onSelect={handleImgChange}>
                             {recipesWithImages.map((recipe, i) => (
                                 <Carousel.Item key={i}>
-                                    <img style={{maxWidth: 400}}
+                                    <img style={{borderRadius:10, 
+                                                 minWidth: 250, 
+                                                 maxWidth: 500,
+                                                 minHeight: 250, 
+                                                 maxHeight: 250, 
+                                                  width: 'auto', 
+                                                  height: 'auto', 
+                                                  objectFit: 'cover' }}
                                         className="w-100 p-50"
                                         src={recipe.image}
                                         alt={recipe.recipeName}

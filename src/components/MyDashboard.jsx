@@ -166,7 +166,7 @@ const handleRemoveFavorite =(recipeId, userId) => {
 
     return (
         <div style={{ display:'flex'}} >
-            <NavBar style={{position:''}}/>
+            <NavBar/>
         <div>
         
         <h2 style={{marginTop:25,
@@ -206,7 +206,7 @@ const handleRemoveFavorite =(recipeId, userId) => {
                                     <div style={{ position: 'relative'}}>
                                     <img style={{borderRadius:10, 
                                                  minWidth: 250, 
-                                                 maxWidth: 500,
+                                                 maxWidth: 525,
                                                  minHeight: 250, 
                                                  maxHeight: 250, 
                                                   width: 'auto', 
@@ -313,8 +313,7 @@ const handleRemoveFavorite =(recipeId, userId) => {
                         
                         <SubmitRecipe/>
                         
-                    </Card.Body>
-                    
+                    </Card.Body>     
             </Card>
 
             </Col>
@@ -326,4 +325,4 @@ const handleRemoveFavorite =(recipeId, userId) => {
 
 }
 
-export default MyDashboard;  
+export default MyDashboard;
