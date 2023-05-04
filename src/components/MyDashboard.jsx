@@ -8,6 +8,8 @@ import SubmitRecipe from "./SubmitRecipe";
 import axios from 'axios'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import RecipeModal from "./RecipeModal";
+import{ alterRecipe } from "../actions/recipeModal";
 
 
 
@@ -19,12 +21,15 @@ const MyDashboard = () => {
     
     
     const loginSelector = useSelector(state => state.alterUser.userLogin)
+    const recipeSelector = useSelector(state => state.recipeModal.clickRecipeModal)
+    console.log(recipeSelector)
     
     const userId = loginSelector.userID
 
 
   const [userRecipes, setUserRecipes] = useState([]);
   const [userRecipesWithImages, setUserRecipesWithImages] = useState([]);
+  const [openDashRecipeModal, setOpenDashRecipeModal] = useState(false)
   
   
 
@@ -161,6 +166,19 @@ const handleRemoveFavorite =(recipeId, userId) => {
     }
 }
 
+const handleRecipeClick = (recipe) => {
+    dispatch(alterRecipe({
+        recipeModalName: recipe.recipeName,
+        recipeModalImage: recipe.image,
+        recipeModalRecipe: recipe.description,
+        recipeID: recipe.recipeId
+    }));
+    setOpenDashRecipeModal(true);
+}
+
+const closeRecipeModal = () => {
+    setOpenDashRecipeModal(false)
+}
 
  
 
@@ -216,9 +234,7 @@ const handleRemoveFavorite =(recipeId, userId) => {
                                             className="w-100 p-50"
                                             src={recipe.image}
                                             alt={recipe.recipeName}
-                                            // onClick={() => {
-                                            //     // TODO: Implement opening the modal with the image, title, and description
-                                            // }}
+                                            onClick = {(e)=>{handleRecipeClick(recipe)}}
                                         />
                                     <Button
                                         variant="secondary"
@@ -286,9 +302,7 @@ const handleRemoveFavorite =(recipeId, userId) => {
                                             className="w-100 p-50"
                                             src={recipe.image}
                                             alt={recipe.recipeName}
-                                            // onClick={() => {
-                                            //     // TODO: Implement opening the modal with the image, title, and description
-                                            // }}
+                                            onClick = {(e)=>{handleRecipeClick(recipe)}}
                                         />
                                     <Button
                                         variant="secondary"
@@ -312,7 +326,7 @@ const handleRemoveFavorite =(recipeId, userId) => {
                         ))}
                         
                         <SubmitRecipe/>
-                        
+                        <RecipeModal isOpen={openDashRecipeModal} img={recipeSelector.recipeModalImage} recipeTitle={recipeSelector.recipeModalName} description={recipeSelector.recipeModalRecipe} onClose={closeRecipeModal} value={recipeSelector.recipeID}></RecipeModal>
                     </Card.Body>     
             </Card>
 
