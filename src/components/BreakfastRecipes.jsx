@@ -237,25 +237,20 @@ function BreakfastRecipes() {
 
                     </InputGroup>
 
-                    
-                    
-
-                    {searchResults.map((recipe, i) => (
-  <Card className="breakfastRecipeDiv" style={{ margin: 20, border: 'none' }}>
-    <Card.Title style={{ textAlign: 'center' }}>{recipe.recipeName}</Card.Title>
-        <Card.Img style={{ borderRadius:10, 
-                             minWidth: 250, 
-                             maxWidth: 500,
-                             minHeight: 250, 
-                             maxHeight: 250, 
-                             width: 'auto', 
-                             height: 'auto', 
-                             objectFit: 'cover' }} 
-                    src={recipe.recipeImg}></Card.Img>
-  </Card>
-))}
-  
-
+        {searchResults.map((recipe, i) => (
+            <Card className="breakfastRecipeDiv" style={{ margin: 20, border: 'none' }}>
+              <Card.Title style={{ textAlign: 'center' }}>{ recipe.recipeName}</Card.Title>
+                  <Card.Img style={{ borderRadius:10, 
+                                       minWidth: 250, 
+                                       maxWidth: 500,
+                                       minHeight: 250, 
+                                       maxHeight: 250, 
+                                       width: 'auto', 
+                                       height: 'auto', 
+                                       objectFit: 'cover' }} 
+                              src={recipe.recipeImg}></Card.Img>
+            </Card>
+          ))}
                 </div>
                 <Card className="d-flex col " style={{ margin: 'auto',
                                                         height:400,
