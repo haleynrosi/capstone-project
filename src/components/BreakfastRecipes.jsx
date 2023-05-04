@@ -16,7 +16,7 @@ function BreakfastRecipes() {
 
     const recipeSelector = useSelector(state=> state.recipeModal.clickRecipeModal)
     const dispatch = useDispatch()
-    console.log(recipeSelector)
+
 
     const [imageIndex, setImageIndex] = useState(0)
     const [searchBreakfastOption, setSearchBreakfastOption] = useState('Search by');
@@ -60,7 +60,7 @@ function BreakfastRecipes() {
 
 
     const searchBreakfastRecipes = (selectedOption) => {
-        for (let recipe in recipesWithImages) {
+    
             if (selectedOption) {
                 setSearchResults({
                     recipeName: selectedOption.recipeName,
@@ -68,9 +68,8 @@ function BreakfastRecipes() {
                     recipeImg: selectedOption.image
                 })
             }
-        }
+    
         console.log(searchResults)
-        console.log(selectedOption)
     }
 
 
@@ -169,7 +168,7 @@ function BreakfastRecipes() {
                     <h2 style={{
                     marginTop:25,
                     fontSize:35,
-                    color:'rgb(188, 143, 143)', 
+                    color:'rgb(60,60,60)', 
                     textAlign: 'center'
             }}>
                 Search Breakfast Recipes
@@ -183,7 +182,9 @@ function BreakfastRecipes() {
                             ref={typeaheadRef}
                             filterBy={['recipeName']}
                             onChange={(selected, placeholder) => {
-                                if(placeholder === 'Search Recipe'){
+                                console.log(placeholder)
+                                console.log(selected[0])
+                                if(searchBreakfastOption === 'Search Recipe'){
                                     searchBreakfastRecipes(selected[0]);
                                 } 
                                 
@@ -207,7 +208,7 @@ function BreakfastRecipes() {
                     </InputGroup>
 
                     <Card className="breakfastRecipeDiv" style={{ margin: 20, border: 'none' }}>
-                        <Card.Title style={{ textAlign: 'center' }}></Card.Title>
+                        <Card.Title style={{ textAlign: 'center' }}>{searchResults.recipeName}</Card.Title>
                         {/* <Card.Img style={{ display: 'none' }}></Card.Img> */}
                     </Card>
 
