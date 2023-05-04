@@ -24,14 +24,14 @@ function RecipesHome(){
         }).catch(error=>{
             console.log(error)
         })
-    }, [])
+    }, [allRecipes])
 
-    console.log(allRecipes)
+ 
 
     useEffect(()=>{
         const getRecipeImages = async () => {
             const updatedRecipes = [];
-            for (const recipeImage in allRecipes){
+            for (const recipeImage of allRecipes){
                 try{
                     const response = await axios.get(
                         `http://34.210.179.63:8008/Images/${recipeImage.imageName}`,
@@ -57,9 +57,11 @@ function RecipesHome(){
         
         }
         getRecipeImages();
-        console.log(recipeWithImages)
+        
 
-    }, [])
+    }, [recipeWithImages])
+
+   
 
     const nextRecipeImage = () => {
         if(imageIndex === recipeWithImages.length - 1){
@@ -69,11 +71,28 @@ function RecipesHome(){
         }
     }
 
-    const renderAllRecipes = () =>{
+ 
+
+     
+
+        const renderAllRecipes = () =>{
+           
+            return recipeWithImages.map((recipe, index)=>{
+                return (
+                    <div  className={`photo ${index ===! 0 ? 'active' : ''}`}
+                    key={index}>
+                        <Card style={{padding:10, margin: 'auto'}}>
+                            <Card.Title>{recipe.recipeName}</Card.Title>
+                            <Card.Img alt={`Photo ${imageIndex}`} src={recipe.image}></Card.Img>
+                        </Card>
+                    </div>
+                )
+            })
+        }
+    
+
+ 
         
-    }
-
-
 
     return(
         <div style={{display: "flex", flexDirection: 'row', height: '100%'}}>
@@ -86,12 +105,12 @@ function RecipesHome(){
                     </Card>
                 </Row>
                 <br></br>
-                <Row>
-                    <Card>
-                        <Card.Title>Featured Recipes</Card.Title>
-                        <Card.Body>{renderAllRecipes()}</Card.Body>
+                <Card>
+                    <div className="imageGalleryContainer">
+                        <div style={{display:'flex', flexDirection: 'row', transition:'transform 0.3s ease-in-out'}}> {renderAllRecipes()}</div>
+                    </div>
                     </Card>
-                </Row>
+                
              </Container>
         </div>
     
