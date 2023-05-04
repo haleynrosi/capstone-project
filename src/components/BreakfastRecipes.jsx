@@ -136,6 +136,7 @@ function BreakfastRecipes() {
             console.log(recipesWithImages)
         };
         fetchImages();
+       
 
     }, [recipes]);
 

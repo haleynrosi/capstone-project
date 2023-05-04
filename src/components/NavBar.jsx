@@ -135,7 +135,7 @@ const createUser = async () => {
 }
 
 return (
-    <body>
+    <div>
         <div style={{ display: 'flex', height: '100%', overflow: 'scroll initial', backgroundColor: '#BC8F8F' }}>
             <nav textColor="white" style={{ padding: 20 }}>
                 <NavLink style={{ textDecoration: 'none', color: 'white', fontSize: 35, margin: 10 }} to='/'>
@@ -274,7 +274,7 @@ return (
                 </Box>
             </Modal>
         </div>
-    </body>
+    </div>
 )
 }
 

@@ -11,7 +11,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 
 
-
 const MyDashboard = () => {
     const dispatch = useDispatch();
     const openRecipeModal = () =>{
@@ -167,7 +166,7 @@ const handleRemoveFavorite =(recipeId, userId) => {
 
     return (
         <div style={{ display:'flex'}} >
-            <NavBar/>
+            <NavBar />
         <div>
         
         <h2 style={{marginTop:25,
