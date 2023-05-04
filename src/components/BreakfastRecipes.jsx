@@ -9,11 +9,13 @@ import { Button, Form, Row, Card, Dropdown, DropdownButton, InputGroup, FormCont
 import { selectClasses } from "@mui/material";
 import RecipeModal from "./RecipeModal";
 import recipeModal, { alterRecipe } from "../actions/recipeModal";
+import { ingredientListSelector, setIngredientList } from "../actions/IngredientsSlice"
 
 
 
 function BreakfastRecipes() {
 
+    const ingredientList = useSelector(ingredientListSelector)
     const recipeSelector = useSelector(state=> state.recipeModal.clickRecipeModal)
     const dispatch = useDispatch()
 
@@ -22,13 +24,30 @@ function BreakfastRecipes() {
     const [searchBreakfastOption, setSearchBreakfastOption] = useState('Search by');
     const [recipes, setRecipes] = useState([]); // all the breakfast recipes are stored here
     const [recipesWithImages, setRecipeswithImages] = useState([]);
-    const [searchResults, setSearchResults] = useState({
+    const [searchResults, setSearchResults] = useState([
+        {
         recipeName: '',
         recipeImg: null,
         recipeInfo: ''
-    });
+        }
+    ]);
+    
 
    const [openRecipeModal, setOpenRecipeModal] = useState(false)
+
+   useState(()=>{
+    axios.get(`http://34.210.179.63:8008/Ingredients`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'api-key': 'DigtalCrafts'
+            }
+        })
+
+            .then((res) => {
+                dispatch(setIngredientList(res.data))
+            })
+   },[])
 
    const handleRecipeClick = (recipe) => {
     dispatch(alterRecipe({
@@ -54,6 +73,7 @@ function BreakfastRecipes() {
     }
 
     const searchOptionDropdown = (searchOption) => {
+        typeaheadRef.current.clear();
         setSearchBreakfastOption(searchOption)
     }
 
@@ -62,11 +82,11 @@ function BreakfastRecipes() {
     const searchBreakfastRecipes = (selectedOption) => {
     
             if (selectedOption) {
-                setSearchResults({
+                setSearchResults([{
                     recipeName: selectedOption.recipeName,
                     recipeInfo: selectedOption.description,
                     recipeImg: selectedOption.image
-                })
+                }])
             }
     
         console.log(searchResults)
@@ -74,21 +94,30 @@ function BreakfastRecipes() {
 
 
 
-    // const searchBreakfastIngredients = (selectedOption) => {
-    //     for(let recipe in recipes)
-    //     axios.get(`http://34.210.179.63:8008/RecipeIngredients/ingredient/${selectedOption.recipe_id}`, {
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Access-Control-Allow-Origin': '*',
-    //             'api-key': 'DigtalCrafts'
-    //         }
-    //     })
-
-    //         .then((response) => {
-    //             console.log(response.data)
-    //         }).catch(error =>
-    //             console.log(error))
-    // }
+    const searchBreakfastIngredients = (selectedOption) => {
+        console.log(selectedOption.ingredientId)
+    
+        axios.get(`http://34.210.179.63:8008/RecipeIngredients/ingredient/${selectedOption.ingredientId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'api-key': 'DigtalCrafts'
+            }
+        })
+        .then((res) => {
+            console.log(res.data)
+            const searchResultsWithImages = res.data.map(result => {
+                const recipeWithImage = recipesWithImages.find(recipe => recipe.recipeName === result.recipeName)
+                return {
+                    recipeName: result.recipeName,
+                    recipeImg: recipeWithImage.image
+                }
+            })
+            setSearchResults(searchResultsWithImages)
+            console.log(searchResults)
+        })
+        .catch(error => console.log(error))
+    }
 
     useEffect(() => {
         axios.get("http://34.210.179.63:8008/Recipes/type/breakfast", {
@@ -144,21 +173,21 @@ function BreakfastRecipes() {
 
 
     return (
-        <div style={{ display: "flex",  flexDirection: 'row' }}>
+        <div style={{ display: "flex", height:'100%', flexDirection: 'row' }}>
             <NavBar />
             <div className="d-flex row" style={{display: "flex",
                                                 justifyContent:'center', 
                                                 width:650, 
                                                 margin:15
                                                 }}>
-            <h2 style={{
-                    marginTop:25,
-                    fontSize:55,
-                    color:'rgb(188, 143, 143)', 
-                    textAlign: 'center'
-            }}>
-            Breakfast
-        </h2>
+                <h2 style={{
+                        marginTop:25,
+                        fontSize:55,
+                        color:'rgb(188, 143, 143)', 
+                        textAlign: 'center'
+                }}>
+                Breakfast
+                </h2>
                 <div className="d-flex row" style={{display: "flex",
                                                 justifyContent:'center',
                                                 flexDirection:'column',
@@ -171,29 +200,29 @@ function BreakfastRecipes() {
                     fontSize:35,
                     color:'rgb(60,60,60)', 
                     textAlign: 'center'
-            }}>
-                Search Breakfast Recipes
-                </h2>
+                    }}>
+                        Search Breakfast Recipes
+                    </h2>
                     <InputGroup>
                         <Typeahead
                             id='recipe-list'
-                            labelKey='recipeName'
-                            options={recipesWithImages}
+                            labelKey={searchBreakfastOption === 'Search Recipe' ? 'recipeName' : 'ingredientName'}
+                            options={searchBreakfastOption === 'Search Recipe' ? recipesWithImages : ingredientList}
                             placeholder={searchBreakfastOption}
                             ref={typeaheadRef}
                             filterBy={['recipeName']}
-                            onChange={(selected, placeholder) => {
-                                console.log(placeholder)
+                            onChange={(selected) => {
+                                
+                                if(selected[0]){
                                 console.log(selected[0])
                                 if(searchBreakfastOption === 'Search Recipe'){
                                     searchBreakfastRecipes(selected[0]);
-                                } 
-                                
-                                
-                                
-                                // else if(placeholder === 'Search Ingredients'){
-                                //     searchBreakfastIngredients(selected[0])
-                                // }
+                                }
+                                else if (searchBreakfastOption === 'Search Ingredients'){
+                                    searchBreakfastIngredients(selected[0])
+                                    console.log('we got a live one')
+                                }
+                            }
 
                             }}
                         />
@@ -208,10 +237,24 @@ function BreakfastRecipes() {
 
                     </InputGroup>
 
-                    <Card className="breakfastRecipeDiv" style={{ margin: 20, border: 'none' }}>
-                        <Card.Title style={{ textAlign: 'center' }}>{searchResults.recipeName}</Card.Title>
-                        {/* <Card.Img style={{ display: 'none' }}></Card.Img> */}
-                    </Card>
+                    
+                    
+
+                    {searchResults.map((recipe, i) => (
+  <Card className="breakfastRecipeDiv" style={{ margin: 20, border: 'none' }}>
+    <Card.Title style={{ textAlign: 'center' }}>{recipe.recipeName}</Card.Title>
+        <Card.Img style={{ borderRadius:10, 
+                             minWidth: 250, 
+                             maxWidth: 500,
+                             minHeight: 250, 
+                             maxHeight: 250, 
+                             width: 'auto', 
+                             height: 'auto', 
+                             objectFit: 'cover' }} 
+                    src={recipe.recipeImg}></Card.Img>
+  </Card>
+))}
+  
 
                 </div>
                 <Card className="d-flex col " style={{ margin: 'auto',
