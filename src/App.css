@@ -53,3 +53,12 @@ color: red;
 }
 
 
+.photo {
+  flex: 0 0 calc(100% / 4);
+  overflow:'x'
+}
+
+.active {
+  transform: scale(1.2);
+  z-index: 1;
+}
