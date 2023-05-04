@@ -16,6 +16,7 @@
     "bootstrap": "^5.2.3",
     "cdbreact": "^1.5.13",
     "dropzone": "^6.0.0-beta.2",
+    "firebase": "^9.21.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.3",
     "react-bootstrap-typeahead": "^6.1.2",

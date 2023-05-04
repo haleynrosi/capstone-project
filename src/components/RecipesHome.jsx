@@ -4,8 +4,13 @@ import {Container,Row, Col, Card} from 'react-bootstrap'
 import '../App.css';
 
 function RecipesHome(){
+
+    
+
+
+
     return(
-        <body style={{display: "flex", flexDirection: 'row'}}>
+        <div style={{display: "flex", flexDirection: 'row', height: '100%'}}>
             <NavBar/>
              <Container style={{paddingTop: 100, paddingRight:100, paddingLeft:100, }}>
                 <Row>
@@ -22,7 +27,7 @@ function RecipesHome(){
                     </Card>
                 </Row>
              </Container>
-        </body>
+        </div>
     
     )
 }
