@@ -181,8 +181,8 @@ function BreakfastRecipes() {
                             placeholder={searchBreakfastOption}
                             ref={typeaheadRef}
                             filterBy={['recipeName']}
-                            onChange={(selected, placeholder) => {
-                                console.log(placeholder)
+                            onChange={(selected) => {
+                                
                                 console.log(selected[0])
                                 if(searchBreakfastOption === 'Search Recipe'){
                                     searchBreakfastRecipes(selected[0]);
