@@ -5,6 +5,7 @@ import axios from "axios";
 import '../App.css';
 import { useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
+import RecipesHome from "./RecipesHome.jsx";
 
 
 function MyAccount(){
@@ -95,6 +96,9 @@ function MyAccount(){
       }
 
     return(
+      !loginSelector.loggedIn ? (
+        <RecipesHome/>
+      ): (
         <div style={{ display: "flex", flexDirection: 'row', height: '100%' }}>   
         <NavBar/>
         <Container>
@@ -135,6 +139,7 @@ function MyAccount(){
        </Container>
        </div>
     )
+  )
 }
 
 export default MyAccount;
