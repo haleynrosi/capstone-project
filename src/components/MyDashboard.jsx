@@ -22,7 +22,6 @@ const MyDashboard = () => {
     
     const loginSelector = useSelector(state => state.alterUser.userLogin)
     const recipeSelector = useSelector(state => state.recipeModal.clickRecipeModal)
-    console.log(recipeSelector)
     
     const userId = loginSelector.userID
 
@@ -36,154 +35,179 @@ const MyDashboard = () => {
 
 
 
-  useEffect(()=>{
-    if (userId) {
-        axios.get(`http://34.210.179.63:8008/Recipes/owner/${userId}`, {
-            headers: {
-                "Content-Type":"application/json",
-                "Access-Control-Allow-Origin": "*",
-                "api-key": "DigtalCrafts"
-            }
-        })
-        .then((res) =>{
-            setUserRecipes(res.data);
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
-    }
-},[userId])
-
-useEffect(()=>{
-    const fetchImages = async() => {
-        const updatedRecipes = [];
-        for (const recipe of userRecipes) {
-            try{
-                const response = await axios.get(
-                    `http://34.210.179.63:8008/Images/${recipe.imageName}`,{
-
-                        headers:{
-                            "Content-Type": "text/html",
-                            "Access-Control-Allow-Origin": "*",
-                            "api-key": "DigtalCrafts"
-                        }
-                    }
-                );
-
-                const updatedRecipe = {
-                    ...recipe,
-                    image: response.data
-                };
-                updatedRecipes.push(updatedRecipe);
-            }catch (err){
-                console.log(err)
-            }
-        }
-        setUserRecipesWithImages(updatedRecipes)
-    };
-    fetchImages();
-},[userId, userRecipes])
-
-
-const [userFavorites, setUserFavorites] = useState([]);
-  const [userFavoritesWithImages, setUserFavoritesWithImages]= useState([]);
-
-
-useEffect(()=>{
-    axios.get(`http://34.210.179.63:8008/Favorites/user/${userId}`, {
-        headers: {
-            "Content-Type":"application/json",
-            "Access-Control-Allow-Origin":"*",
-            "api-key":"DigtalCrafts"
-        }
-    })
-    .then((res)=>{
-        setUserFavorites(res.data);
-        console.log(userFavorites)
-    })
-    .catch((err)=>{
-        console.log(err);
-    })
-},[userId])
-
-
-
-useEffect(()=>{
-    const fetchFavoriteImages = async() => {
-        const updatedFavorites = [];
-        for (const favorite of userFavorites) {
-            console.log(favorite.imageName)
-            try{
-                const response = await axios.get(
-                    `http://34.210.179.63:8008/Images/${favorite.imageName}`, {
-
-                        headers:{
-                            "Content-Type":"text/html",
-                            "Access-Control-Allow-Origin": "*",
-                            "api-key": "DigtalCrafts"
-                        }
-                    }
-                );
-                const updatedFavorite = {
-                    ...favorite,
-                    image: response.data
-                };
-                updatedFavorites.push(updatedFavorite);
-            }catch (err) {
+    useEffect(()=>{
+        if (userId) {
+            axios.get(`http://34.210.179.63:8008/Recipes/owner/${userId}`, {
+                headers: {
+                    "Content-Type":"application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "api-key": "DigtalCrafts"
+                }
+            })
+            .then((res) =>{
+                setUserRecipes(res.data);
+            })
+            .catch((err)=>{
                 console.log(err);
-            }
+            })
         }
-        setUserFavoritesWithImages(updatedFavorites);
+    },[userId])
+
+    useEffect(()=>{
+        const fetchImages = async() => {
+            const updatedRecipes = [];
+            for (const recipe of userRecipes) {
+                try{
+                    const response = await axios.get(
+                        `http://34.210.179.63:8008/Images/${recipe.imageName}`,{
+
+                            headers:{
+                                "Content-Type": "text/html",
+                                "Access-Control-Allow-Origin": "*",
+                                "api-key": "DigtalCrafts"
+                            }
+                        }
+                    );
+
+                    const updatedRecipe = {
+                        ...recipe,
+                        image: response.data
+                    };
+                    updatedRecipes.push(updatedRecipe);
+                }catch (err){
+                    console.log(err)
+                }
+            }
+            setUserRecipesWithImages(updatedRecipes)
+        };
+        fetchImages();
+    },[userId, userRecipes])
+
+
+    const [userFavorites, setUserFavorites] = useState([]);
+    const [userFavoritesWithImages, setUserFavoritesWithImages]= useState([]);
+
+
+    useEffect(()=>{
+        if(userId){
+            axios.get(`http://34.210.179.63:8008/Favorites/user/${userId}`, {
+                headers: {
+                    "Content-Type":"application/json",
+                    "Access-Control-Allow-Origin":"*",
+                    "api-key":"DigtalCrafts"
+                }
+            })
+            .then((res)=>{
+                setUserFavorites(res.data);
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+        }
+        
+    },[userId])
+
+
+
+    useEffect(()=>{
+        const fetchFavoriteImages = async() => {
+            const updatedFavorites = [];
+            for (const favorite of userFavorites) {
+                try{
+                    const response = await axios.get(
+                        `http://34.210.179.63:8008/Images/${favorite.imageName}`, {
+
+                            headers:{
+                                "Content-Type":"text/html",
+                                "Access-Control-Allow-Origin": "*",
+                                "api-key": "DigtalCrafts"
+                            }
+                        }
+                    );
+                    const updatedFavorite = {
+                        ...favorite,
+                        image: response.data
+                    };
+                    updatedFavorites.push(updatedFavorite);
+                }catch (err) {
+                    console.log(err);
+                }
+            }
+            setUserFavoritesWithImages(updatedFavorites);
+        }
+        fetchFavoriteImages();
+    },[userId, userFavorites])
+
+
+
+
+
+    const handleDeleteRecipe =  (recipeId) => {  
+        if (recipeId) {
+            axios.delete(`http://34.210.179.63:8008/Recipes/id/${recipeId}`, {
+                headers: {'api-key': 'DigtalCrafts'}
+            })
+            .then(() => {
+                setUserRecipesWithImages(userRecipesWithImages.filter(recipe => recipe.recipeId !== recipeId));
+            })
+            .catch(err => console.error(err));   
+        }
     }
-    fetchFavoriteImages();
-},[userId, userFavorites])
 
-
-
-
-
-const handleDeleteRecipe =  (recipeId) => {  
-    if (recipeId) {
-        axios.delete(`http://34.210.179.63:8008/Recipes/id/${recipeId}`, {
-            headers: {'api-key': 'DigtalCrafts'}
-        })
-        .then(() => {
-            setUserRecipesWithImages(userRecipesWithImages.filter(recipe => recipe.recipeId !== recipeId));
-        })
-        .catch(err => console.error(err));   
+    const handleRemoveFavorite =(recipeId, userId) => {
+        console.log(recipeId, userId)
+        if (recipeId) {
+            axios.delete(`http://34.210.179.63:8008/Favorites/user/${userId}/recipe/${recipeId}`, {
+                headers: {'api-key':'DigtalCrafts'}
+            })
+            .then(()=>{
+                setUserFavoritesWithImages(userFavoritesWithImages.filter(recipe=> recipe.recipeId !== recipeId))
+            })
+        }
     }
-}
 
-const handleRemoveFavorite =(recipeId, userId) => {
-    console.log(recipeId, userId)
-    if (recipeId) {
-        axios.delete(`http://34.210.179.63:8008/Favorites/user/${userId}/recipe/${recipeId}`, {
-            headers: {'api-key':'DigtalCrafts'}
-        })
-        .then(()=>{
-            setUserFavoritesWithImages(userFavoritesWithImages.filter(recipe=> recipe.recipeId !== recipeId))
-        })
+   
+    const handleRecipeClick = async (recipe) => {
+        if (recipe) {
+            try {
+                const res = await axios.get(`http://34.210.179.63:8008/Users/id/${recipe.owner}`, {
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'api-key': 'DigtalCrafts'
+                    }
+                });
+                const ingredientRes = await axios.get(`http://34.210.179.63:8008/RecipeIngredients/recipe/${recipe.recipeId}`, {
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'api-key': 'DigtalCrafts'
+                    }
+                });
+                const ownerUsername = res.data.username;
+                const ingredients = ingredientRes.data
+                dispatch(alterRecipe({
+                    recipeModalName: recipe.recipeName,
+                    recipeModalImage: recipe.image,
+                    recipeModalRecipe: recipe.description,
+                    recipeID: recipe.recipeId,
+                    owner: ownerUsername,
+                    recipeModalIngredients: ingredients
+                }));
+                
+                setOpenDashRecipeModal(true);
+            } catch (error) {
+                console.log(error);
+            }
+            console.log(recipeSelector.recipeModalIngredients)
+        }
+    };
+
+    const closeRecipeModal = () => {
+        setOpenDashRecipeModal(false)
     }
-}
-
-const handleRecipeClick = (recipe) => {
-    dispatch(alterRecipe({
-        recipeModalName: recipe.recipeName,
-        recipeModalImage: recipe.image,
-        recipeModalRecipe: recipe.description,
-        recipeID: recipe.recipeId
-    }));
-    setOpenDashRecipeModal(true);
-}
-
-const closeRecipeModal = () => {
-    setOpenDashRecipeModal(false)
-}
-
  
 
     return (
-        <div style={{ display:'flex'}} >
+        <div style={{ display: "flex", flexDirection: 'row', height: '100%'}} >
             <NavBar />
         <div>
         
@@ -326,7 +350,7 @@ const closeRecipeModal = () => {
                         ))}
                         
                         <SubmitRecipe/>
-                        <RecipeModal isOpen={openDashRecipeModal} img={recipeSelector.recipeModalImage} recipeTitle={recipeSelector.recipeModalName} description={recipeSelector.recipeModalRecipe} onClose={closeRecipeModal} value={recipeSelector.recipeID}></RecipeModal>
+                        <RecipeModal isOpen={openDashRecipeModal} img={recipeSelector.recipeModalImage} recipeTitle={recipeSelector.recipeModalName} description={recipeSelector.recipeModalRecipe} owner={recipeSelector.owner} ingredients={recipeSelector.recipeModalIngredients} onClose={closeRecipeModal} value={recipeSelector.recipeID}></RecipeModal>
                     </Card.Body>     
             </Card>
 

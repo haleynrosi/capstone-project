@@ -49,21 +49,43 @@ function LunchRecipes() {
             })
     }, [])
 
-    const handleRecipeClick = (recipe) => {
-        dispatch(alterRecipe({
-            recipeModalName: recipe.recipeName,
-            recipeModalImage: recipe.image,
-            recipeModalRecipe: recipe.description,
-            recipeID: recipe.recipeId
-        }));
-        setOpenRecipeModal(true);
-    }
-
+    const handleRecipeClick = async (recipe) => {
+        if (recipe) {
+            try {
+                const res = await axios.get(`http://34.210.179.63:8008/Users/id/${recipe.owner}`, {
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'api-key': 'DigtalCrafts'
+                    }
+                });
+                const ingredientRes = await axios.get(`http://34.210.179.63:8008/RecipeIngredients/recipe/${recipe.recipeId}`, {
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'api-key': 'DigtalCrafts'
+                    }
+                });
+                const ownerUsername = res.data.username;
+                const ingredients = ingredientRes.data
+                dispatch(alterRecipe({
+                    recipeModalName: recipe.recipeName,
+                    recipeModalImage: recipe.image,
+                    recipeModalRecipe: recipe.description,
+                    recipeID: recipe.recipeId,
+                    owner: ownerUsername,
+                    recipeModalIngredients: ingredients
+                }));
+                
+                setOpenRecipeModal(true);
+            } catch (error) {
+                console.log(error);
+            }
+            console.log(recipeSelector.recipeModalIngredients)
+        }
+    };
 
     const closeRecipeModal = () => {
         setOpenRecipeModal(false)
     }
-
 
 
     const typeaheadRef = useRef(null);
@@ -134,39 +156,39 @@ function LunchRecipes() {
     }, []);
 
     useEffect(() => {
-        const fetchImages = async () => {
-            const updatedRecipes = [];
-            for (const recipe of recipes) {
-                try {
-                    const response = await axios.get(
-                        `http://34.210.179.63:8008/Images/${recipe.imageName}`,
-                        {
-                            headers: {
-                                "Content-Type": "text/html",
-                                "Access-Control-Allow-Origin": "*",
-                                "api-key": "DigtalCrafts",
-                            },
-                        }
-                    );
-
-                    // Update the recipe object with the image data
-                    const updatedRecipe = {
-                        ...recipe,
-                        image: response.data,
-                    };
-                    updatedRecipes.push(updatedRecipe);
-                } catch (error) {
-                    console.log(error);
+        if(recipes.length != 0) {
+            const fetchImages = async () => {
+                const updatedRecipes = [];
+                for (const recipe of recipes) {
+                    try {
+                        const response = await axios.get(
+                            `http://34.210.179.63:8008/Images/${recipe.imageName}`,
+                            {
+                                headers: {
+                                    "Content-Type": "text/html",
+                                    "Access-Control-Allow-Origin": "*",
+                                    "api-key": "DigtalCrafts",
+                                },
+                            }
+                        );
+    
+                        // Update the recipe object with the image data
+                        const updatedRecipe = {
+                            ...recipe,
+                            image: response.data,
+                        };
+                        updatedRecipes.push(updatedRecipe);
+                    } catch (error) {
+                        console.log(error);
+                    }
                 }
-            }
-
-            // Set the state with the updated copy of the recipes array
-            setRecipeswithImages(updatedRecipes);
-            console.log(recipesWithImages)
-        };
-        fetchImages();
-
-
+    
+                // Set the state with the updated copy of the recipes array
+                setRecipeswithImages(updatedRecipes);
+                console.log(recipesWithImages)
+            };
+            fetchImages();
+        }
     }, [recipes]);
 
 
@@ -288,7 +310,7 @@ function LunchRecipes() {
 
                                             }}
                                         />
-                                        <RecipeModal isOpen={openRecipeModal} img={recipeSelector.recipeModalImage} recipeTitle={recipeSelector.recipeModalName} description={recipeSelector.recipeModalRecipe} onClose={closeRecipeModal} value={recipeSelector.recipeID}></RecipeModal>
+                                        <RecipeModal isOpen={openRecipeModal} img={recipeSelector.recipeModalImage} recipeTitle={recipeSelector.recipeModalName} description={recipeSelector.recipeModalRecipe} owner={recipeSelector.owner} ingredients={recipeSelector.recipeModalIngredients} onClose={closeRecipeModal} value={recipeSelector.recipeID}></RecipeModal>
                                         <Carousel.Caption>
                                             <h5>{recipe.recipeName}</h5>
                                         </Carousel.Caption>

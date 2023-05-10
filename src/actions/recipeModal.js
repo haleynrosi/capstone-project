@@ -22,6 +22,7 @@ const initialState = {
             state.clickRecipeModal.recipeModalIngredients = action.payload.recipeModalIngredients
             state.clickRecipeModal.recipeModalRecipe= action.payload.recipeModalRecipe
             state.clickRecipeModal.recipeID = action.payload.recipeID
+            state.clickRecipeModal.owner = action.payload.owner
            
         }
 

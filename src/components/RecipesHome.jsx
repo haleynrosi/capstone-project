@@ -16,6 +16,10 @@ function RecipesHome() {
 
     const recipeSelector = useSelector(state => state.recipeModal.clickRecipeModal)
     const recipeOfDaySelector = useSelector(state => state.recipeOfDay.recipeOfTheDay)
+
+    const loginSelector = useSelector(state => state.alterUser.userLogin)
+    
+    const userId = loginSelector.userID
     const dispatch = useDispatch()
     
 
@@ -58,7 +62,7 @@ function RecipesHome() {
         }).catch(error => {
             console.log(error)
         })
-    }, [allRecipes])
+    }, [])
 
 
 
@@ -130,20 +134,43 @@ function RecipesHome() {
         })
     }
 
-    const handleRecipeClick = (recipe) => {
-        dispatch(alterRecipe({
-            recipeModalName: recipe.recipeName,
-            recipeModalImage: recipe.image,
-            recipeModalRecipe: recipe.description,
-            recipeID: recipe.recipeId
-        }));
-        setOpenRecipeModal(true);
-    }
+    const handleRecipeClick = async (recipe) => {
+        if (recipe) {
+            try {
+                const res = await axios.get(`http://34.210.179.63:8008/Users/id/${recipe.owner}`, {
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'api-key': 'DigtalCrafts'
+                    }
+                });
+                const ingredientRes = await axios.get(`http://34.210.179.63:8008/RecipeIngredients/recipe/${recipe.recipeId}`, {
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'api-key': 'DigtalCrafts'
+                    }
+                });
+                const ownerUsername = res.data.username;
+                const ingredients = ingredientRes.data
+                dispatch(alterRecipe({
+                    recipeModalName: recipe.recipeName,
+                    recipeModalImage: recipe.image,
+                    recipeModalRecipe: recipe.description,
+                    recipeID: recipe.recipeId,
+                    owner: ownerUsername,
+                    recipeModalIngredients: ingredients
+                }));
+                
+                setOpenRecipeModal(true);
+            } catch (error) {
+                console.log(error);
+            }
+            console.log(recipeSelector.recipeModalIngredients)
+        }
+    };
 
     const closeRecipeModal = () => {
         setOpenRecipeModal(false)
     }
-
 
 
     return (
@@ -208,7 +235,7 @@ function RecipesHome() {
                         </Carousel>
                        
                     </Card>
-                    <RecipeModal isOpen={openRecipeModal} img={recipeSelector.recipeModalImage} recipeTitle={recipeSelector.recipeModalName} description={recipeSelector.recipeModalRecipe} onClose={closeRecipeModal} value={recipeSelector.recipeID}></RecipeModal>
+                    <RecipeModal isOpen={openRecipeModal} img={recipeSelector.recipeModalImage} recipeTitle={recipeSelector.recipeModalName} description={recipeSelector.recipeModalRecipe} owner={recipeSelector.owner} ingredients={recipeSelector.recipeModalIngredients} onClose={closeRecipeModal} value={recipeSelector.recipeID}></RecipeModal>
                 </Container>
             </div>
         </div>
