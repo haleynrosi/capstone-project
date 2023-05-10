@@ -122,7 +122,7 @@ function BreakfastRecipes() {
 
     const searchBreakfastIngredients = (selectedOption) => {
         console.log(selectedOption.ingredientId)
-
+    
         axios.get(`http://34.210.179.63:8008/RecipeIngredients/ingredient/${selectedOption.ingredientId}`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -132,18 +132,22 @@ function BreakfastRecipes() {
         })
             .then((res) => {
                 console.log(res.data)
-                const searchResultsWithImages = res.data.map(result => {
-                    const recipeWithImage = recipesWithImages.find(recipe => recipe.recipeName === result.recipeName)
-                    return {
-                        recipeName: result.recipeName,
-                        recipeImg: recipeWithImage.image
-                    }
+                const searchResultsWithImages = res.data
+                .filter(result => result.recipeType === 'breakfast') 
+                .map(result => {
+        
+                        const recipeWithImage = recipesWithImages.find(recipe => recipe.recipeName === result.recipeName)
+                        return {
+                            recipeName: result.recipeName,
+                            recipeImg: recipeWithImage.image
+                        }
+
                 })
                 setSearchResults(searchResultsWithImages)
                 console.log(searchResults)
             })
             .catch(error => console.log(error))
-    }
+        }
 
     useEffect(() => {
         axios.get("http://34.210.179.63:8008/Recipes/type/breakfast", {
