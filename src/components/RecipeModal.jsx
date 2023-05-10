@@ -133,24 +133,34 @@ function RecipeModal(props) {
                             </Card.Body>
                             </Row>
                         
-                            <div className="actions" style={{display:'flex',flexFlow:'row nowrap', columnGap:'35px',alignItems:'center',justifyContent:'center'}}>
-                              <Button style={{ backgroundColor: 'white', border:'none'}} onClick={props.onClose}><CancelPresentation style={{fontSize:'40px',color:`RGB(196, 137, 137)`}}/></Button>
-                              <Card.Link  style={{color: `RGB(196, 137, 137)`}} onClick={(e)=>{
-                                  e.preventDefault();
-                                  if (isLiked) {
-                                      handleRemoveFavorite();
-                                  }else{
-                                      isRecipeFavorite();
-                                  }
-                                  setIsLiked(!isLiked)
-                                  
-                              }}>
-                                {isLiked? <Favorite style={{fontSize:'40px',cursor:'pointer',color:`RGB(196, 137, 137)`}}/> : <FavoriteBorder style={{fontSize:'40px',cursor:'pointer',color:`RGB(196, 137, 137)`}}/>}
-                                </Card.Link>
-                                {loginSelector && loginSelector.username===props.owner ? (
-                                  <EditOutlinedIcon style={{fontSize:'40px',cursor:'pointer',color:`RGB(196, 137, 137)`}}/>
-                                ) : null}   
-                        </div>
+                            <div className="actions" style={{display:'flex',flexFlow:'row nowrap', columnGap:'15px',alignItems:'center',justifyContent:'center'}}>
+  <Button style={{ backgroundColor: 'white', border:'none'}} onClick={props.onClose}>
+    <CancelPresentation style={{fontSize:'30px',color:`RGB(196, 137, 137)`}}/>
+  </Button>
+  {loginSelector.loggedIn ? ( // Move the opening parenthesis to the end of the previous line
+    <>
+      <Card.Link style={{color: `RGB(196, 137, 137)`}} onClick={(e)=>{
+        e.preventDefault();
+        if (isLiked) {
+          handleRemoveFavorite();
+        } else {
+          isRecipeFavorite();
+        }
+        setIsLiked(!isLiked);
+      }}>
+        {isLiked ? (
+          <Favorite style={{fontSize:'40px',cursor:'pointer',color:`RGB(196, 137, 137)`}}/>
+        ) : (
+          <FavoriteBorder style={{fontSize:'30px',cursor:'pointer',color:`RGB(196, 137, 137)`}}/>
+        )}
+      </Card.Link>
+      {loginSelector.username === props.owner ? (
+        <EditOutlinedIcon style={{fontSize:'30px',cursor:'pointer',color:`RGB(196, 137, 137)`}}/>
+      ) : null}
+    </>
+  ) : null} {/* Close the ternary operator with a curly brace */}
+</div>
+
                     </Card>
                     <br></br>
                 </Typography>
