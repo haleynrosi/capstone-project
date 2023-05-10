@@ -7,6 +7,8 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import {CancelPresentation, FavoriteBorder, Favorite} from '@mui/icons-material';
 
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+
 
 
 function RecipeModal(props) {
@@ -132,19 +134,22 @@ function RecipeModal(props) {
                             </Row>
                         
                             <div className="actions" style={{display:'flex',flexFlow:'row nowrap', columnGap:'35px',alignItems:'center',justifyContent:'center'}}>
-                            <Card.Link  style={{color: `RGB(196, 137, 137)`}} onClick={(e)=>{
-                                e.preventDefault();
-                                if (isLiked) {
-                                    handleRemoveFavorite();
-                                }else{
-                                    isRecipeFavorite();
-                                }
-                                setIsLiked(!isLiked)
-                                
-                            }}>
+                              <Button style={{ backgroundColor: 'white', border:'none'}} onClick={props.onClose}><CancelPresentation style={{fontSize:'40px',color:`RGB(196, 137, 137)`}}/></Button>
+                              <Card.Link  style={{color: `RGB(196, 137, 137)`}} onClick={(e)=>{
+                                  e.preventDefault();
+                                  if (isLiked) {
+                                      handleRemoveFavorite();
+                                  }else{
+                                      isRecipeFavorite();
+                                  }
+                                  setIsLiked(!isLiked)
+                                  
+                              }}>
                                 {isLiked? <Favorite style={{fontSize:'40px',cursor:'pointer',color:`RGB(196, 137, 137)`}}/> : <FavoriteBorder style={{fontSize:'40px',cursor:'pointer',color:`RGB(196, 137, 137)`}}/>}
                                 </Card.Link>
-                        <Button style={{ backgroundColor: 'white', border:'none'}} onClick={props.onClose}><CancelPresentation style={{fontSize:'40px',color:`RGB(196, 137, 137)`}}/></Button>
+                                {loginSelector && loginSelector.username===props.owner ? (
+                                  <EditOutlinedIcon style={{fontSize:'40px',cursor:'pointer',color:`RGB(196, 137, 137)`}}/>
+                                ) : null}   
                         </div>
                     </Card>
                     <br></br>
