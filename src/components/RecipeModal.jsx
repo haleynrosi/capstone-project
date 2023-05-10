@@ -98,30 +98,20 @@ function RecipeModal(props) {
             style={{display:'flex', justifyContent:'center', alignItems:'center'}}
             
         >
-            <Box style={{ overflowY:'scroll',  display:'flex', maxHeight:'50%', maxWidth: '50%'}}>
+            <Box style={{  padding:20, backgroundColor:'white', margin:15, overflowY:'scroll',  display:'flex', maxHeight:'50%', maxWidth: '50%'}}>
                 <Typography id="modal-modal-description" >
-                    <Card style={{ flexDirection: 'column', padding: 20, border:'solid', borderColor: `RGB(196, 137, 137)`, borderWidth:10}}>
-                            <Card.Link  style={{color: `RGB(196, 137, 137)`}} href="#" onClick={(e)=>{
-                                e.preventDefault();
-                                if (isLiked) {
-                                    handleRemoveFavorite();
-                                }else{
-                                    isRecipeFavorite();
-                                }
-                                setIsLiked(!isLiked)
-                                
-                            }}>
-                                {isLiked? <Favorite/> : <FavoriteBorder/>}
+                    <Card style={{ display:'flex', flexDirection: 'column', padding: 10, border:'solid', borderColor: `RGB(196, 137, 137)`, borderWidth:10}}>
+                           
             
-                            </Card.Link>
-                            <Card.Title style={{textAlign: 'center', color: `RGB(196, 137, 137)`, fontSize:30, marginBottom:20}} >{props.recipeTitle}</Card.Title>
+                          
+                            <Card.Title style={{textAlign: 'center', padding:10, color: `RGB(196, 137, 137)`, fontSize:30, marginBottom:20}} >{props.recipeTitle}</Card.Title>
                             <Row>
                            
                             <Card.Body style={{ display:'flex', flexFlow: 'row wrap', justifyContent:'center',alignItems:'center', columnGap:'5vw', rowGap:'5vw' }}>
                                 <Card.Img style={{maxWidth:'50%'}} src={props.img}></Card.Img>
                                 <div className="recipeDetails" style ={{ display:'flex', flexDirection:'column',rowGap:'20px',justifyContent:'center', textAlign:'center' }}>
                                     <div>
-                                        <p style={{ fontSize:'125%', color:'rgb(188,143,143)' }}>Crafted By</p>
+                                        <p style={{ fontSize:'125%', color:'rgb(188,143,143)' }}>Crafted by</p>
                                         <div style={{fontSize:'145%'}}>{props.owner}</div>
                                     </div>
                                     <div>
@@ -141,10 +131,23 @@ function RecipeModal(props) {
                             </Card.Body>
                             </Row>
                         
-                            
-                        
-                        <Button style={{backgroundColor: 'white', border:'none'}} onClick={props.onClose}><CancelPresentation style={{color:`RGB(196, 137, 137)`}}/></Button>
+                            <div className="actions" style={{display:'flex',flexFlow:'row nowrap', columnGap:'35px',alignItems:'center',justifyContent:'center'}}>
+                            <Card.Link  style={{color: `RGB(196, 137, 137)`}} onClick={(e)=>{
+                                e.preventDefault();
+                                if (isLiked) {
+                                    handleRemoveFavorite();
+                                }else{
+                                    isRecipeFavorite();
+                                }
+                                setIsLiked(!isLiked)
+                                
+                            }}>
+                                {isLiked? <Favorite style={{fontSize:'40px',cursor:'pointer',color:`RGB(196, 137, 137)`}}/> : <FavoriteBorder style={{fontSize:'40px',cursor:'pointer',color:`RGB(196, 137, 137)`}}/>}
+                                </Card.Link>
+                        <Button style={{ backgroundColor: 'white', border:'none'}} onClick={props.onClose}><CancelPresentation style={{fontSize:'40px',color:`RGB(196, 137, 137)`}}/></Button>
+                        </div>
                     </Card>
+                    <br></br>
                 </Typography>
             </Box>
         </Modal>
