@@ -128,7 +128,9 @@ function DinnerRecipes() {
         })
             .then((res) => {
                 console.log(res.data)
-                const searchResultsWithImages = res.data.map(result => {
+                const searchResultsWithImages = res.data
+                .filter(result => result.recipeType ==='dinner')
+                .map(result => {
                     const recipeWithImage = recipesWithImages.find(recipe => recipe.recipeName === result.recipeName)
                     return {
                         recipeName: result.recipeName,

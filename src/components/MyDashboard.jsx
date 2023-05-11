@@ -10,6 +10,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import RecipeModal from "./RecipeModal";
 import{ alterRecipe } from "../actions/recipeModal";
+import RecipesHome  from "./RecipesHome.jsx";
 
 
 
@@ -207,160 +208,176 @@ const MyDashboard = () => {
  
 
     return (
-        <div style={{ display: "flex", flexDirection: 'row', height: '100%'}} >
+        !loginSelector.loggedIn ? (
+          <RecipesHome />
+        ) : (
+          <div style={{ display: "flex", flexDirection: 'row', height: '100%'}} >
             <NavBar />
-        <div>
-        
-        <h2 style={{marginTop:25,
-                    fontSize:55,
-                    color:'rgb(188, 143, 143)', 
-                    textAlign: 'center'
-            }}>
-            Dashboard
-        </h2>
-       
-        <Row style={{
-                     padding:50}}>
-            <Col >
-            {/* favorites card */}
-
-                <Card style={{textAlign:'center', 
-                              margin: 'auto', 
-                              padding:10, 
-                              border:'none', 
-                              color:'rgb(60,60,60)'
-                              }}>
+            <div>
+              <h2 style={{
+                marginTop:25,
+                fontSize:55,
+                color:'rgb(188, 143, 143)', 
+                textAlign: 'center'
+              }}>
+                Dashboard
+              </h2>
+              <Row style={{ padding:50}}>
+                <Col>
+                  {/* favorites card */}
+                  <Card style={{
+                    textAlign:'center', 
+                    margin: 'auto', 
+                    padding:10, 
+                    border:'none', 
+                    color:'rgb(60,60,60)'
+                  }}>
                     <Card.Title style={{fontSize:40}}>Favorites</Card.Title>
-                    <Card.Body style={{display:'flex', 
-                                       flexFlow:'row wrap', 
-                                       rowGap: 25, 
-                                       columnGap:25}}>
-                    {userFavoritesWithImages.map((recipe)=>(
+                    <Card.Body style={{
+                      display:'flex', 
+                      flexFlow:'row wrap', 
+                      rowGap: 25, 
+                      columnGap:25
+                    }}>
+                      {userFavoritesWithImages.map((recipe)=>(
                         <Col>
-                          <Card style ={{margin:'auto',
-                                        padding:20, 
-                                        borderWidth:3, 
-                                        color:'rgb(100,100,100)', 
-                                        borderColor:'rgb(188,143,143)'
-                                        }}>
-                                <Card.Title>{recipe.recipeName}</Card.Title>
-                                <Card.Body >
-                                    <div style={{ position: 'relative'}}>
-                                    <img style={{borderRadius:10, 
-                                                 minWidth: 250, 
-                                                 maxWidth: 525,
-                                                 minHeight: 250, 
-                                                 maxHeight: 250, 
-                                                  width: 'auto', 
-                                                  height: 'auto', 
-                                                  objectFit: 'cover'  
-                                                }}
-                                            className="w-100 p-50"
-                                            src={recipe.image}
-                                            alt={recipe.recipeName}
-                                            onClick = {(e)=>{handleRecipeClick(recipe)}}
-                                        />
-                                    <Button
-                                        variant="secondary"
-                                        onClick={() => handleRemoveFavorite(recipe.recipeId, userId)}
-                                        style={{ position:'absolute',top: 0, left: 0, backgroundColor: 'transparent', border:'none', color: `RGB(196, 137, 137)` }}
-                                        title="Remove favorite"
-                                    >
-                                        <FavoriteIcon
-                                        style={{fontSize:40, textShadow:'0px 2px 40px #000'}} />
-                                        
-                                    </Button>  
-                                    </div> 
-                                </Card.Body>
+                          <Card style ={{
+                            margin:'auto',
+                            padding:20, 
+                            borderWidth:3, 
+                            color:'rgb(100,100,100)', 
+                            borderColor:'rgb(188,143,143)'
+                          }}>
+                            <Card.Title>{recipe.recipeName}</Card.Title>
+                            <Card.Body >
+                              <div style={{ position: 'relative'}}>
+                                <img style={{
+                                  borderRadius:10, 
+                                  minWidth: 250, 
+                                  maxWidth: 525,
+                                  minHeight: 250, 
+                                  maxHeight: 250, 
+                                  width: 'auto', 
+                                  height: 'auto', 
+                                  objectFit: 'cover'  
+                                }}
+                                className="w-100 p-50"
+                                src={recipe.image}
+                                alt={recipe.recipeName}
+                                onClick={(e)=>{handleRecipeClick(recipe)}}
+                                />
+                                <Button
+                                  variant="secondary"
+                                  onClick={() => handleRemoveFavorite(recipe.recipeId, userId)}
+                                  style={{
+                                    position:'absolute',
+                                    top: 0, 
+                                    left: 0, 
+                                    backgroundColor: 'transparent', 
+                                    border:'none', 
+                                    color: `RGB(196, 137, 137)`
+                                  }}
+                                  title="Remove favorite"
+                                >
+                                  <FavoriteIcon
+                                    style={{fontSize:40, textShadow:'0px 2px 40px #000'}}
+                                  />
+                                </Button>  
+                              </div> 
+                            </Card.Body>
                           </Card>  
                         </Col>
-                        ))}
+                      ))}
                     </Card.Body>
-                </Card>
-            </Col>
-        </Row>
-        <Row style={{display:"flex", padding:50}}>
-            <Col>
-            {/* Created recipes card */}
-
-                <Card style={{textAlign:'center', 
-                              margin: 'auto', 
-                              padding:10, 
-                              border:'none', 
-                              color:'rgb(60,60,60)'
-                        }}>
+                  </Card>
+                </Col>
+              </Row>
+              <Row style={{display:"flex", padding:50}}>
+                <Col>
+                  {/* Created recipes card */}
+                  <Card style={{
+                    textAlign:'center', 
+                    margin: 'auto', 
+                    padding:10, 
+                    border:'none', 
+                    color:'rgb(60,60,60)'
+                  }}>
                     <Button onClick={ openRecipeModal }
-                            style={{margin:'auto' ,
-                                    marginBottom:20,
-                                    fontSize:25, 
-                                    color:'rgb(188, 143, 143)', 
-                                    borderWidth:3, 
-                                    borderColor:'rgb(188, 143, 143)', 
-                                    backgroundColor: 'white'}}>Post a recipe
+                            style={{
+                              margin:'auto' ,
+                              marginBottom:20,
+                              fontSize:25, 
+                              color:'rgb(188, 143, 143)', 
+                              borderWidth:3, 
+                              borderColor:'rgb(188, 143, 143)', 
+                              backgroundColor: 'white'
+                            }}>
+                      Post a recipe
                     </Button>
                     <Card.Title style={{fontSize:40}}>Your Recipes</Card.Title>
-                    <Card.Body style={{display:'flex', 
-                                       flexFlow:'row wrap', 
-                                       rowGap: 25, 
-                                       columnGap:25}}>
-                        {userRecipesWithImages.map((recipe)=>(
-                        <Col>
-                          <Card style ={{margin:'auto',
-                                        padding:20, 
-                                        borderWidth:3, 
-                                        color:'rgb(100,100,100)', 
-                                        borderColor:'rgb(188,143,143)'
-                                        }}>
-                                <Card.Title>{recipe.recipeName}</Card.Title>
-                                <Card.Body>
-                                    <div style={{ position: 'relative'  }}>
-                                    <img style={{ borderRadius:10, 
-                                                  minWidth: 250, 
-                                                  maxWidth: 525,
-                                                  minHeight: 250, 
-                                                  maxHeight: 250, 
-                                                  width: 'auto', 
-                                                  height: 'auto', 
-                                                  objectFit: 'cover' 
-                                                }}
-                                            className="w-100 p-50"
-                                            src={recipe.image}
-                                            alt={recipe.recipeName}
-                                            onClick = {(e)=>{handleRecipeClick(recipe)}}
-                                        />
-                                    <Button
-                                        variant="secondary"
-                                        onClick={() => handleDeleteRecipe(recipe.recipeId)}
-                                        style={{ position:'absolute',
-                                                 top: 0, 
-                                                 left: 0, 
-                                                 backgroundColor: 'transparent', 
-                                                 border:'none', 
-                                                 color: `RGB(173, 69, 69` }}
-                                        title="Delete recipe"
-                                    >
-                                        <HighlightOffIcon
-                                        style={{fontSize:40, 
-                                                textShadow:'0px 2px 40px #000'}} />
-                                    </Button>  
-                                    </div> 
-                                </Card.Body>
-                          </Card>  
-                        </Col>
-                        ))}
-                        
-                        <SubmitRecipe/>
-                        <RecipeModal isOpen={openDashRecipeModal} img={recipeSelector.recipeModalImage} recipeTitle={recipeSelector.recipeModalName} description={recipeSelector.recipeModalRecipe} owner={recipeSelector.owner} ingredients={recipeSelector.recipeModalIngredients} onClose={closeRecipeModal} value={recipeSelector.recipeID}></RecipeModal>
-                    </Card.Body>     
-            </Card>
-
-            </Col>
-        </Row>
-
+                    <Card.Body style={{
+                      display:'flex', 
+                      flexFlow:'row wrap', 
+                                           rowGap: 25, 
+                                           columnGap:25}}>
+                            {userRecipesWithImages.map((recipe)=>(
+                            <Col>
+                              <Card style ={{margin:'auto',
+                                            padding:20, 
+                                            borderWidth:3, 
+                                            color:'rgb(100,100,100)', 
+                                            borderColor:'rgb(188,143,143)'
+                                            }}>
+                                    <Card.Title>{recipe.recipeName}</Card.Title>
+                                    <Card.Body>
+                                        <div style={{ position: 'relative'  }}>
+                                        <img style={{ borderRadius:10, 
+                                                      minWidth: 250, 
+                                                      maxWidth: 525,
+                                                      minHeight: 250, 
+                                                      maxHeight: 250, 
+                                                      width: 'auto', 
+                                                      height: 'auto', 
+                                                      objectFit: 'cover' 
+                                                    }}
+                                                className="w-100 p-50"
+                                                src={recipe.image}
+                                                alt={recipe.recipeName}
+                                                onClick = {(e)=>{handleRecipeClick(recipe)}}
+                                            />
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() => handleDeleteRecipe(recipe.recipeId)}
+                                            style={{ position:'absolute',
+                                                     top: 0, 
+                                                     left: 0, 
+                                                     backgroundColor: 'transparent', 
+                                                     border:'none', 
+                                                     color: `RGB(173, 69, 69` }}
+                                            title="Delete recipe"
+                                        >
+                                            <HighlightOffIcon
+                                            style={{fontSize:40, 
+                                                    textShadow:'0px 2px 40px #000'}} />
+                                        </Button>  
+                                        </div> 
+                                    </Card.Body>
+                              </Card>  
+                            </Col>
+                            ))}
+                            
+                            <SubmitRecipe/>
+                            <RecipeModal isOpen={openDashRecipeModal} img={recipeSelector.recipeModalImage} recipeTitle={recipeSelector.recipeModalName} description={recipeSelector.recipeModalRecipe} owner={recipeSelector.owner} ingredients={recipeSelector.recipeModalIngredients} onClose={closeRecipeModal} value={recipeSelector.recipeID}></RecipeModal>
+                        </Card.Body>     
+                </Card>
+    
+                </Col>
+            </Row>
+    
+            </div>
         </div>
-    </div>
+            )
     )
-
 }
 
 export default MyDashboard;
