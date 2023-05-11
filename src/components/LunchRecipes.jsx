@@ -128,11 +128,13 @@ function LunchRecipes() {
         })
             .then((res) => {
                 console.log(res.data)
-                const searchResultsWithImages = res.data.map(result => {
+                const searchResultsWithImages = res.data
+                .filter(result => result.recipeType === 'lunch')
+                .map(result => {
                     const recipeWithImage = recipesWithImages.find(recipe => recipe.recipeName === result.recipeName)
                     return {
                         recipeName: result.recipeName,
-                        recipeImg: recipeWithImage.image
+                         recipeImg: recipeWithImage.image
                     }
                 })
                 setSearchResults(searchResultsWithImages)
