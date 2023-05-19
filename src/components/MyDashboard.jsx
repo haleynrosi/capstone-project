@@ -22,7 +22,7 @@ const MyDashboard = () => {
     
     const loginSelector = useSelector(state => state.alterUser.userLogin)
     const recipeSelector = useSelector(state => state.recipeModal.clickRecipeModal)
-    console.log(recipeSelector)
+
     
     const userId = loginSelector.userID
 
@@ -183,7 +183,7 @@ const closeRecipeModal = () => {
  
 
     return (
-        <div style={{ display:'flex'}} >
+        <div style={{ display:'flex',  flexDirection: 'row', height: '100%',}} >
             <NavBar />
         <div>
         
